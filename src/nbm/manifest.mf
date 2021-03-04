@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module-Name: UI Testing
+OpenIDE-Module-Display-Category: ADITO / QA
+OpenIDE-Module-Short-Description: UI Testing Support for ADITO Designer
+OpenIDE-Module-Long-Description: UI Testing Support for ADITO Designer
+  <p style="font-weight: bold;">Changelog</p>
