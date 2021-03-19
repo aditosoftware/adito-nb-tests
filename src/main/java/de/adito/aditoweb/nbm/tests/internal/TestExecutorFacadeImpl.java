@@ -6,6 +6,7 @@ import de.adito.notification.INotificationFacade;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.*;
+import org.openide.windows.*;
 
 import java.io.*;
 import java.util.Collection;
@@ -13,11 +14,15 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
+ * Implementation of {@link ITestExecutorFacade}
+ *
  * @author s.seemann, 17.03.2021
  */
 public class TestExecutorFacadeImpl implements ITestExecutorFacade
 {
-  ExecutorService executorService = Executors.newSingleThreadExecutor();
+  private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+  private final InputOutput output = IOProvider.getDefault().getIO("cypress", false);
+
   private INodeJSEnvironment nodeJsEnv;
   private INodeJSExecutor executor;
 
@@ -26,10 +31,17 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
     executor = INodeJSExecutor.findInstance(pProject).orElse(null);
     INodeJSProvider provider = INodeJSProvider.findInstance(pProject).orElse(null);
     if (executor == null
-        || provider == null || !provider.current().blockingFirst().isPresent())
+        || provider == null
+        || !provider.current().blockingFirst().isPresent())
       throw new NoNodeJSException();
 
     nodeJsEnv = provider.current().blockingFirst().get();
+  }
+
+  private void _log(@NotNull String pMsg)
+  {
+    output.select();
+    output.getOut().print(pMsg);
   }
 
   @Override
@@ -47,7 +59,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
       try
       {
         String result = executor.executeSync(nodeJsEnv, INodeJSExecBase.binary("cypress.cmd"), -1, "run", "--spec", specQuoted);
-        System.out.println("result: " + result);
+        _log(result);
       }
       catch (IOException | InterruptedException pE)
       {
@@ -63,8 +75,8 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
     executorService.execute(() -> {
       try
       {
-        String result = executor.executeSync(nodeJsEnv, INodeJSExecBase.binary("cypress"), -1, "run");
-        System.out.println("result: " + result);
+        String result = executor.executeSync(nodeJsEnv, INodeJSExecBase.binary("cypress.cmd"), -1, "run");
+        _log(result);
       }
       catch (IOException | InterruptedException pE)
       {
