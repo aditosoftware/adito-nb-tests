@@ -1,7 +1,8 @@
 package de.adito.aditoweb.nbm.tests.actions.create;
 
-import de.adito.aditoweb.nbm.tests.actions.*;
-import de.adito.aditoweb.nbm.tests.nbm.*;
+import de.adito.aditoweb.nbm.tests.actions.AbstractFolderBasedAction;
+import de.adito.aditoweb.nbm.tests.nbm.NbUtil;
+import de.adito.notification.INotificationFacade;
 import org.jetbrains.annotations.NotNull;
 import org.openide.awt.*;
 import org.openide.nodes.Node;
@@ -34,7 +35,7 @@ public class NewTestFileAction extends AbstractFolderBasedAction
       }
       catch (IOException pE)
       {
-        pE.printStackTrace(); // TODO errorhandling
+        INotificationFacade.INSTANCE.error(pE);
       }
     }
 

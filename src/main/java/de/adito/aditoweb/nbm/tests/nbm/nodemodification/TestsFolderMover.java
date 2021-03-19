@@ -1,6 +1,7 @@
 package de.adito.aditoweb.nbm.tests.nbm.nodemodification;
 
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
+import de.adito.notification.INotificationFacade;
 import io.reactivex.rxjava3.functions.Consumer;
 import org.netbeans.api.project.*;
 import org.openide.filesystems.FileObject;
@@ -49,9 +50,9 @@ class TestsFolderMover implements Consumer<Optional<FileObject>>
       {
         TestsFolderService.getInstance(project).renameModel(oldName, newName);
       }
-      catch (IOException e)
+      catch (IOException pE)
       {
-        e.printStackTrace(); // TODO errorhandling
+        INotificationFacade.INSTANCE.error(pE);
       }
     }
   }

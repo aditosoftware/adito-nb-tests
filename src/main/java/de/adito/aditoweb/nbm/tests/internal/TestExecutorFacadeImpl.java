@@ -2,6 +2,7 @@ package de.adito.aditoweb.nbm.tests.internal;
 
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.javascript.node.*;
 import de.adito.aditoweb.nbm.tests.api.ITestExecutorFacade;
+import de.adito.notification.INotificationFacade;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.*;
@@ -50,7 +51,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
       }
       catch (IOException | InterruptedException pE)
       {
-        pE.printStackTrace();  // TODO errorhandling
+        INotificationFacade.INSTANCE.error(pE);
       }
     });
   }
@@ -67,7 +68,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
       }
       catch (IOException | InterruptedException pE)
       {
-        pE.printStackTrace();  // TODO errorhandling
+        INotificationFacade.INSTANCE.error(pE);
       }
     });
   }
