@@ -1,4 +1,4 @@
-package de.adito.aditoweb.nbm.tests.actions;
+package de.adito.aditoweb.nbm.tests.actions.create;
 
 import org.openide.awt.*;
 import org.openide.util.*;
@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
  * @author s.seemann, 05.03.2021
  */
 @NbBundle.Messages("CTL_TestsAction=New")
-@ActionID(category = "Tests", id = "de.adito.aditoweb.nbm.tests.actions.NewActionsContainer")
+@ActionID(category = "Tests", id = "de.adito.aditoweb.nbm.tests.actions.create.NewActionsContainer")
 @ActionRegistration(displayName = "#CTL_TestsAction", lazy = false)
 @ActionReference(path = "de/adito/aod/action/neonView", position = 170, separatorBefore = 160, separatorAfter = 180)
 public class NewActionsContainer extends AbstractAction implements Presenter.Popup

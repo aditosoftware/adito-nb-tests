@@ -2,6 +2,7 @@ package de.adito.aditoweb.nbm.tests.actions;
 
 import de.adito.actions.AbstractAsyncNodeAction;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IProjectQuery;
+import de.adito.aditoweb.nbm.tests.api.ITestFileProvider;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.Project;
@@ -94,10 +95,10 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
   {
     File f = null;
 
-    IFolderProvider fileProvider = pNode.getLookup().lookup(IFolderProvider.class);
+    ITestFileProvider fileProvider = pNode.getLookup().lookup(ITestFileProvider.class);
     if (fileProvider != null)
     {
-      FileObject folder = fileProvider.getFolder();
+      FileObject folder = fileProvider.getFile();
       if (folder != null)
         f = FileUtil.toFile(folder);
     }
@@ -113,18 +114,4 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
 
     return f;
   }
-
-  /**
-   * Interface to provide a single folder for selection in the activated nodes
-   */
-  public interface IFolderProvider
-  {
-    /**
-     * @return the folder instance or null, if it could not be found
-     */
-    @Nullable
-    FileObject getFolder();
-  }
 }
-
-

@@ -1,5 +1,6 @@
-package de.adito.aditoweb.nbm.tests.actions;
+package de.adito.aditoweb.nbm.tests.actions.create;
 
+import de.adito.aditoweb.nbm.tests.actions.*;
 import de.adito.aditoweb.nbm.tests.nbm.*;
 import org.jetbrains.annotations.NotNull;
 import org.openide.awt.*;
@@ -14,7 +15,7 @@ import java.io.*;
  * @author s.seemann, 05.03.2021
  */
 @NbBundle.Messages("CTL_NewFile=New Test-File")
-@ActionID(category = "Tests", id = "de.adito.aditoweb.nbm.tests.actions.NewTestFileAction")
+@ActionID(category = "Tests", id = "de.adito.aditoweb.nbm.tests.actions.create.NewTestFileAction")
 @ActionRegistration(displayName = "#CTL_NewFile", lazy = false)
 @ActionReference(path = "Plugins/Tests/Actions/New", position = 200, separatorAfter = 250)
 public class NewTestFileAction extends AbstractFolderBasedAction
