@@ -94,6 +94,11 @@
       <artifactId>org-openide-modules</artifactId>
       <version>${netbeans.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-api-progress</artifactId>
+      <version>${netbeans.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -119,6 +124,12 @@
       <groupId>de.adito.nb-modules</groupId>
       <artifactId>de-adito-netbeans-utilities</artifactId>
       <version>${netbeans.version}-1.6.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.adito.nbm</groupId>
+      <artifactId>de-adito-runconfig-api</artifactId>
+      <version>${netbeans.version}-1.6.2</version>
     </dependency>
 
     <dependency>

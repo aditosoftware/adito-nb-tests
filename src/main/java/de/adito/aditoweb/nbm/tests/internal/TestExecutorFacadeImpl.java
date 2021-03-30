@@ -36,6 +36,8 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
       throw new NoNodeJSException();
 
     nodeJsEnv = provider.current().blockingFirst().get();
+
+    output.select();
   }
 
   private void _log(@NotNull String pMsg)
