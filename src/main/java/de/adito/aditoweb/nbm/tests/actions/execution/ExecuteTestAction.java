@@ -1,6 +1,5 @@
 package de.adito.aditoweb.nbm.tests.actions.execution;
 
-import de.adito.actions.AbstractAsyncNodeAction;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IProjectQuery;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.javascript.node.INodeJSProvider;
 import de.adito.aditoweb.nbm.tests.api.*;
@@ -10,6 +9,7 @@ import org.openide.awt.*;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 import org.openide.util.*;
+import org.openide.util.actions.NodeAction;
 
 import java.util.*;
 import java.util.stream.*;
@@ -23,14 +23,14 @@ import java.util.stream.*;
 @ActionID(category = "Tests", id = "de.adito.aditoweb.nbm.tests.actions.execution.ExecuteTestAction")
 @ActionRegistration(displayName = "#CTL_ExecuteTestsAction", lazy = false)
 @ActionReferences({
-                   @ActionReference(path = ITestsConstants.ACTIONS_PATH),
-                   @ActionReference(path = "de/adito/aod/action/neonView", position = 210)
+    @ActionReference(path = ITestsConstants.ACTIONS_PATH),
+    @ActionReference(path = "de/adito/aod/action/neonView", position = 210)
 })
-public class ExecuteTestAction extends AbstractAsyncNodeAction
+public class ExecuteTestAction extends NodeAction
 {
 
   @Override
-  protected boolean enable0(@NotNull Node[] activatedNodes)
+  protected boolean enable(@NotNull Node[] activatedNodes)
   {
     if (activatedNodes.length > 0)
     {
