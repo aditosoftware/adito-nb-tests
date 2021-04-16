@@ -1,6 +1,7 @@
 package de.adito.aditoweb.nbm.tests.internal.runconfig;
 
 import de.adito.nbm.runconfig.api.*;
+import de.adito.observables.netbeans.OpenProjectsObservable;
 import de.adito.util.reactive.ObservableCollectors;
 import io.reactivex.rxjava3.core.Observable;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +27,13 @@ public class TestsRunConfigProvider implements ISystemRunConfigProvider
         .map(ISystemInfo::getProject)
         .filter(Objects::nonNull)
         .distinct()
-        .map(pProject -> Observable.just((IRunConfig) new AllTestsRunConfig(pProject)))
+        .map(pProject -> Observable.just((IRunConfig) new AllTestsRunConfig(pProject, getOpenProjects())))
         .collect(ObservableCollectors.combineToList());
+  }
+
+  protected Observable<List<Project>> getOpenProjects()
+  {
+    return OpenProjectsObservable.create();
   }
 
   @Override
