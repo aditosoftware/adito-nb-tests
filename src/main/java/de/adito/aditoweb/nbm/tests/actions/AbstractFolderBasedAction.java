@@ -13,6 +13,7 @@ import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 
 import java.io.File;
+import java.util.*;
 
 /**
  * Abstract Action for all actions, which work on files.
@@ -25,7 +26,8 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
   @Override
   protected boolean enable0(@NotNull Node[] activatedNodes)
   {
-    return activatedNodes.length == 1;
+    // One Non-Null Node
+    return Arrays.stream(activatedNodes).filter(Objects::nonNull).count() == 1;
   }
 
   @Override
@@ -37,7 +39,8 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
     if (result != DialogDescriptor.OK_OPTION || input.isEmpty())
       return;
 
-    Node node = activatedNodes[0];
+    //noinspection OptionalGetWithoutIsPresent Action would be disabled
+    Node node = Arrays.stream(activatedNodes).filter(Objects::nonNull).findFirst().get();
     File parent = _findFileOnFileSystem(node);
     if (parent != null)
       performAction0(node, parent, input);
