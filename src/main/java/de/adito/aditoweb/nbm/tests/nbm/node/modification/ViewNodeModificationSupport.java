@@ -1,4 +1,4 @@
-package de.adito.aditoweb.nbm.tests.nbm.nodemodification;
+package de.adito.aditoweb.nbm.tests.nbm.node.modification;
 
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.nodes.INodeModificationSupport;
 import org.jetbrains.annotations.*;
