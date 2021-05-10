@@ -3,14 +3,16 @@ package de.adito.aditoweb.nbm.tests.internal;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.javascript.node.*;
 import de.adito.aditoweb.nbm.tests.api.ITestExecutorFacade;
 import de.adito.notification.INotificationFacade;
+import org.apache.commons.io.output.WriterOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.*;
+import org.openide.util.*;
 import org.openide.windows.*;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -20,11 +22,16 @@ import java.util.stream.Collectors;
  */
 public class TestExecutorFacadeImpl implements ITestExecutorFacade
 {
-  private final ExecutorService executorService = Executors.newSingleThreadExecutor();
   private final InputOutput output = IOProvider.getDefault().getIO("cypress", false);
+  private final WriterOutputStream outputWriter;
 
   private INodeJSEnvironment nodeJsEnv;
   private INodeJSExecutor executor;
+
+  public TestExecutorFacadeImpl()
+  {
+    outputWriter = new WriterOutputStream(this.output.getOut(), StandardCharsets.UTF_8, 128, true);
+  }
 
   private void _setUp(@NotNull Project pProject)
   {
@@ -37,13 +44,16 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
 
     nodeJsEnv = provider.current().blockingFirst().get();
 
+    try
+    {
+      output.getOut().reset();
+    }
+    catch (IOException pE)
+    {
+      INotificationFacade.INSTANCE.error(pE);
+    }
     output.select();
-  }
-
-  private void _log(@NotNull String pMsg)
-  {
-    output.select();
-    output.getOut().print(pMsg);
+    output.getOut().println(NbBundle.getMessage(TestExecutorFacadeImpl.class, "LBL_OUTPUT_STARTING"));
   }
 
   @Override
@@ -57,33 +67,38 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
         .collect(Collectors.joining(","));
 
     String specQuoted = "\"" + specs + "\"";
-    executorService.execute(() -> {
-      try
-      {
-        String result = executor.executeSync(nodeJsEnv, INodeJSExecBase.binary("cypress.cmd"), -1, "run", "--spec", specQuoted);
-        _log(result);
-      }
-      catch (IOException | InterruptedException pE)
-      {
-        INotificationFacade.INSTANCE.error(pE);
-      }
-    });
+    try
+    {
+      executor.executeAsync(nodeJsEnv, _getExecBase(), outputWriter, null,
+                            null, "run", "--spec", specQuoted);
+    }
+    catch (IOException pE)
+    {
+      INotificationFacade.INSTANCE.error(pE);
+    }
   }
 
   @Override
   public void executeAllTests(@NotNull Project pProject)
   {
     _setUp(pProject);
-    executorService.execute(() -> {
-      try
-      {
-        String result = executor.executeSync(nodeJsEnv, INodeJSExecBase.binary("cypress.cmd"), -1, "run");
-        _log(result);
-      }
-      catch (IOException | InterruptedException pE)
-      {
-        INotificationFacade.INSTANCE.error(pE);
-      }
-    });
+
+    try
+    {
+      executor.executeAsync(nodeJsEnv, _getExecBase(), outputWriter, null,
+                            null, "run");
+    }
+    catch (IOException pE)
+    {
+      INotificationFacade.INSTANCE.error(pE);
+    }
+  }
+
+  @NotNull
+  private INodeJSExecBase _getExecBase()
+  {
+    if (BaseUtilities.isWindows())
+      return INodeJSExecBase.binary("cypress.cmd");
+    return INodeJSExecBase.binary("cypress");
   }
 }
