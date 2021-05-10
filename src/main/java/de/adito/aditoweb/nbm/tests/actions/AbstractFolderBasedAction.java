@@ -36,11 +36,11 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
     NotifyDescriptor.InputLine desc = new NotifyDescriptor.InputLine(getInputLineTitle(), getName());
     Object result = DialogDisplayer.getDefault().notify(desc);
     String input = desc.getInputText().trim();
-    if (result != DialogDescriptor.OK_OPTION || input.isEmpty())
+    if (result != NotifyDescriptor.OK_OPTION || input.isEmpty())
       return;
 
     //noinspection OptionalGetWithoutIsPresent Action would be disabled
-    Node node = Arrays.stream(activatedNodes).filter(Objects::nonNull).findFirst().get();
+    Node node = Arrays.stream(activatedNodes).filter(Objects::nonNull).findFirst().get(); // NOSONAR
     File parent = _findFileOnFileSystem(node);
     if (parent != null)
       performAction0(node, parent, input);

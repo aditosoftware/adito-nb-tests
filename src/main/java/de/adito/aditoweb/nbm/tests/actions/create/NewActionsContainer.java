@@ -22,7 +22,7 @@ public class NewActionsContainer extends AbstractAction implements Presenter.Pop
   @Override
   public void actionPerformed(ActionEvent e)
   {
-    throw new RuntimeException("Not implemented");
+    throw new IllegalStateException("Not implemented");
   }
 
   @Override
