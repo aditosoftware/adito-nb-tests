@@ -66,6 +66,13 @@ public class TestsFolderService implements Disposable
     return disposable.isDisposed();
   }
 
+  @NotNull
+  public Observable<Optional<FileObject>> observeCypressFolder()
+  {
+    return cache.calculate("testsFolder", () -> FileObservable.create(_getCypressFolderFile())
+        .map(pFileOpt -> pFileOpt.map(FileUtil::toFileObject)));
+  }
+
   /**
    * Observes the {@link TestsFolderService#_TEST_FOLDER} of this project
    *
@@ -88,6 +95,18 @@ public class TestsFolderService implements Disposable
   public Observable<Optional<FileObject>> observeTestsFolderForModel(@NotNull String pModelName)
   {
     return cache.calculate("testsFolderForModel_" + pModelName, () -> FileObservable.create(_getTestsFolderFileForModel(pModelName))
+        .map(pFileOpt -> pFileOpt.map(FileUtil::toFileObject)));
+  }
+
+  /**
+   * Observes the {@link TestsFolderService#_GLOBAL_TESTS} folder
+   *
+   * @return Observable with the folder as content. Triggers on Rename/Move etc.
+   */
+  @NotNull
+  public Observable<Optional<FileObject>> observeGlobalTestsFolder()
+  {
+    return cache.calculate("testsGlobalTestsFolder", () -> FileObservable.create(_getGlobalTestsFolder())
         .map(pFileOpt -> pFileOpt.map(FileUtil::toFileObject)));
   }
 
@@ -128,6 +147,25 @@ public class TestsFolderService implements Disposable
       FileUtils.deleteDirectory(oldFolder);
   }
 
+  /**
+   * Creates the global-tests folder in the project directory
+   */
+  public void createGlobalTestsFolder()
+  {
+    //noinspection ResultOfMethodCallIgnored
+    _getGlobalTestsFolder().mkdirs();
+  }
+
+  /**
+   * Creates the cypress folder in the project directory
+   */
+  public void createCypressFolder()
+  {
+    //noinspection ResultOfMethodCallIgnored
+    _getCypressFolderFile().mkdirs();
+  }
+
+
   @NotNull
   private File _getTestsFolderFileForModel(@NotNull String pModelName)
   {
@@ -135,8 +173,20 @@ public class TestsFolderService implements Disposable
   }
 
   @NotNull
+  private File _getGlobalTestsFolder()
+  {
+    return new File(FileUtil.toFile(project.getProjectDirectory()), _GLOBAL_TESTS);
+  }
+
+  @NotNull
   private File _getTestsFolderFile()
   {
     return new File(FileUtil.toFile(project.getProjectDirectory()), _TEST_FOLDER);
+  }
+
+  @NotNull
+  private File _getCypressFolderFile()
+  {
+    return new File(FileUtil.toFile(project.getProjectDirectory()), _CYPRESS);
   }
 }
