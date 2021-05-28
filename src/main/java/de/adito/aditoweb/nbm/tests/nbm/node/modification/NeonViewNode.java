@@ -2,12 +2,13 @@ package de.adito.aditoweb.nbm.tests.nbm.node.modification;
 
 import de.adito.aditoweb.nbm.tests.api.*;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
+import de.adito.nbm.project.ProjectTabUtil;
 import de.adito.observables.netbeans.*;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.*;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.*;
-import org.openide.filesystems.FileObject;
+import org.openide.filesystems.*;
 import org.openide.loaders.*;
 import org.openide.nodes.*;
 import org.openide.util.Utilities;
@@ -25,24 +26,55 @@ import java.util.concurrent.TimeUnit;
 class NeonViewNode extends FilterNode implements Disposable
 {
   private final CompositeDisposable disposable = new CompositeDisposable();
+  private Boolean changeOriginal = null;
+  private FolderNode node = null;
+  private List<String[]> expanded = null;
 
   public NeonViewNode(Node pOriginal)
   {
     super(new AbstractNode(Children.LEAF), null,
           new ProxyLookup(new AbstractLookup(new InstanceContent()),
                           Lookups.exclude(pOriginal.getLookup(), Node.class),
-                          Lookups.fixed((ITestFileProvider) () -> {
-                            DataObject dataObject = pOriginal.getLookup().lookup(DataObject.class);
+                          Lookups.fixed(new _FileProvider(pOriginal))));
 
-                            if (dataObject == null)
-                              return null;
+    disposable.add(_watchTestsFolder(pOriginal).subscribe(pFileObject -> FilterNode.Children.MUTEX.postWriteRequest(() -> {
+      if (pFileObject.isPresent())
+      {
+        // change original only once
+        if (Boolean.TRUE.equals(changeOriginal))
+        {
+          Node foNode = _getNode(pFileObject.get());
+          // Create node only once
+          if (node == null)
+          {
+            node = new FolderNode(foNode != null ? foNode : new AbstractNode(Children.LEAF));
+            changeOriginal(node, true);
+            changeOriginal(pOriginal, false);
 
-                            return dataObject.getPrimaryFile();
-                          })));
+          }
+          else
+          {
+            if (foNode != null)
+              node.changeOriginal(foNode);
+            if (expanded != null)
+            {
+              ProjectTabUtil.setExpandedNodes(expanded);
+              expanded = null;
+            }
+          }
+          changeOriginal = false;
+        }
+      }
+      // if fileObject isn't present, on the next event the original must be changed
+      else if (Boolean.FALSE.equals(changeOriginal))
+        changeOriginal = true;
 
-    disposable.add(_watchTestsFolderNode(pOriginal).subscribe(pFolderNodeOpt -> FilterNode.Children.MUTEX.postWriteRequest(() -> {
-      changeOriginal(new FolderNode(pFolderNodeOpt.orElseGet(() -> new AbstractNode(Children.LEAF))), true);
-      changeOriginal(pOriginal, false);
+      // Change only once the original of the view node
+      if (changeOriginal == null)
+      {
+        changeOriginal(pOriginal, false);
+        changeOriginal = true;
+      }
     })));
 
     // Tests-Folder-Mover
@@ -70,7 +102,7 @@ class NeonViewNode extends FilterNode implements Disposable
    * @return the tests folder observable
    */
   @NotNull
-  private Observable<Optional<Node>> _watchTestsFolderNode(@NotNull Node pViewNode)
+  private Observable<Optional<FileObject>> _watchTestsFolder(@NotNull Node pViewNode)
   {
     return _watchViewAODFile(pViewNode)
 
@@ -85,14 +117,7 @@ class NeonViewNode extends FilterNode implements Disposable
             .orElseGet(() -> Observable.just(Optional.empty())))
 
         // only changes
-        .distinctUntilChanged()
-
-        // FileObject to Node
-        .switchMap(pFileOpt -> pFileOpt
-            .map(this::_getNode)
-            .map(pNode -> NodeObservable.create(pNode)
-                .map(Optional::of))
-            .orElseGet(() -> Observable.just(Optional.empty())));
+        .distinctUntilChanged();
   }
 
   /**
@@ -169,5 +194,27 @@ class NeonViewNode extends FilterNode implements Disposable
 
     if (!wasInserted)
       pActions.addAll(Utilities.actionsForPath(ITestsConstants.ACTIONS_PATH));
+  }
+
+  private static class _FileProvider implements ITestFileProvider
+  {
+    private final Node original;
+
+    _FileProvider(Node pOriginal)
+    {
+
+      original = pOriginal;
+    }
+
+    @Nullable
+    @Override
+    public FileObject getFile()
+    {
+      Project project = original.getLookup().lookup(Project.class);
+      if (project != null)
+        return FileUtil.toFileObject(TestsFolderService.getInstance(project).getTestsFolderForModel(original.getName()));
+
+      return null;
+    }
   }
 }

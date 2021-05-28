@@ -24,6 +24,12 @@ public class FolderNode extends FilterNode
                                                                pOriginal.getLookup()));
   }
 
+  public void changeOriginal(@NotNull Node pNode)
+  {
+    if (!pNode.equals(getOriginal()))
+      changeOriginal(pNode, true);
+  }
+
   @Override
   public Action[] getActions(boolean pContext)
   {
