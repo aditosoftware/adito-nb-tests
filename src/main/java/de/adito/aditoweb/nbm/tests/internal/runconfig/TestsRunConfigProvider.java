@@ -27,18 +27,19 @@ public class TestsRunConfigProvider implements ISystemRunConfigProvider
         .map(ISystemInfo::getProject)
         .filter(Objects::nonNull)
         .distinct()
-        .map(pProject -> Observable.just((IRunConfig) new AllTestsRunConfig(pProject, getOpenProjects())))
-        .collect(ObservableCollectors.combineToList());
-  }
-
-  protected Observable<List<Project>> getOpenProjects()
-  {
-    return OpenProjectsObservable.create();
+        .map(pProject -> Observable.just(List.<IRunConfig>of(new CypressRunAllConfig(pProject, observeOpenProjects()),
+                                                             new CypressOpenConfig(pProject, observeOpenProjects()))))
+        .collect(ObservableCollectors.combineListToList());
   }
 
   @Override
   public ISystemRunConfigProvider getInstance(Project pProject)
   {
     return this;
+  }
+
+  protected Observable<List<Project>> observeOpenProjects()
+  {
+    return OpenProjectsObservable.create();
   }
 }

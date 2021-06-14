@@ -21,13 +21,13 @@ import java.util.*;
  *
  * @author s.seemann, 30.03.2021
  */
-public class AllTestsRunConfig implements IRunConfig
+public class CypressRunAllConfig implements IRunConfig
 {
-  private final Project project;
+  protected final Project project;
   private final IVaadinIconsProvider iconsProvider;
   private final Observable<List<Project>> openProjects;
 
-  public AllTestsRunConfig(@NotNull Project pProject, @NotNull Observable<List<Project>> pOpenProjects)
+  public CypressRunAllConfig(@NotNull Project pProject, @NotNull Observable<List<Project>> pOpenProjects)
   {
     openProjects = pOpenProjects;
     iconsProvider = Lookup.getDefault().lookup(IVaadinIconsProvider.class);
@@ -64,11 +64,16 @@ public class AllTestsRunConfig implements IRunConfig
           return Observable.just("");
         })
         .map(pProjectName -> {
-          String text = NbBundle.getMessage(AllTestsRunConfig.class, "TITLE_TESTS_RUNFCONFIG");
+          String text = getText();
           if (pProjectName.trim().isEmpty())
             return text;
           return text + IActiveConfigComponentProvider.DISPLAY_NAME_SEPARATOR + pProjectName;
         });
+  }
+
+  protected String getText()
+  {
+    return NbBundle.getMessage(CypressRunAllConfig.class, "TITLE_CYPRESS_RUN_CONFIG");
   }
 
   @Override

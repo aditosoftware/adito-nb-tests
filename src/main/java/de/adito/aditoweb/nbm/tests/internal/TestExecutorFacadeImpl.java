@@ -33,33 +33,10 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
     outputWriter = new WriterOutputStream(this.output.getOut(), StandardCharsets.UTF_8, 128, true);
   }
 
-  private void _setUp(@NotNull Project pProject)
-  {
-    executor = INodeJSExecutor.findInstance(pProject).orElse(null);
-    INodeJSProvider provider = INodeJSProvider.findInstance(pProject).orElse(null);
-    if (executor == null
-        || provider == null
-        || !provider.current().blockingFirst().isPresent())
-      throw new NoNodeJSException();
-
-    nodeJsEnv = provider.current().blockingFirst().get();
-
-    try
-    {
-      output.getOut().reset();
-    }
-    catch (IOException pE)
-    {
-      INotificationFacade.INSTANCE.error(pE);
-    }
-    output.select();
-    output.getOut().println(NbBundle.getMessage(TestExecutorFacadeImpl.class, "LBL_OUTPUT_STARTING"));
-  }
-
   @Override
   public void executeTests(@NotNull Project pProject, @NotNull Collection<FileObject> pFiles)
   {
-    _setUp(pProject);
+    _setup(pProject);
 
     String specs = pFiles.stream()
         .map(FileUtil::toFile)
@@ -81,7 +58,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
   @Override
   public void executeAllTests(@NotNull Project pProject)
   {
-    _setUp(pProject);
+    _setup(pProject);
 
     try
     {
@@ -92,6 +69,45 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
     {
       INotificationFacade.INSTANCE.error(pE);
     }
+  }
+
+  @Override
+  public void executeCypressOpen(@NotNull Project pProject)
+  {
+    _setup(pProject);
+
+    try
+    {
+      executor.executeAsync(nodeJsEnv, _getExecBase(), outputWriter, null,
+                            null, "open");
+    }
+    catch (IOException pE)
+    {
+      INotificationFacade.INSTANCE.error(pE);
+    }
+  }
+
+  private void _setup(@NotNull Project pProject)
+  {
+    executor = INodeJSExecutor.findInstance(pProject).orElse(null);
+    INodeJSProvider provider = INodeJSProvider.findInstance(pProject).orElse(null);
+    if (executor == null
+        || provider == null
+        || !provider.current().blockingFirst().isPresent())
+      throw new NoNodeJSException();
+
+    nodeJsEnv = provider.current().blockingFirst().get();
+
+    try
+    {
+      output.getOut().reset();
+    }
+    catch (IOException pE)
+    {
+      INotificationFacade.INSTANCE.error(pE);
+    }
+    output.select();
+    output.getOut().println(NbBundle.getMessage(TestExecutorFacadeImpl.class, "LBL_OUTPUT_STARTING"));
   }
 
   @NotNull

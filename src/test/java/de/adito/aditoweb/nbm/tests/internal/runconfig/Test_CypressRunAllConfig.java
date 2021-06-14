@@ -11,11 +11,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Test for {@link AllTestsRunConfig}
+ * Test for {@link CypressRunAllConfig}
  *
  * @author s.seemann, 01.04.2021
  */
-class Test_AllTestsRunConfig
+class Test_CypressRunAllConfig
 {
   private static final String _PROJECT1_NAME = "Project 1";
   private static final String _PROJECT2_NAME = "Project 2";
@@ -35,20 +35,20 @@ class Test_AllTestsRunConfig
     Project project2 = Mockito.mock(Project.class);
     Mockito.when(project2.getLookup()).thenReturn(Lookups.fixed(projectInformation2));
 
-    AllTestsRunConfig runConfig = new AllTestsRunConfig(project1, Observable.just(List.of(project1)));
+    CypressRunAllConfig runConfig = new CypressRunAllConfig(project1, Observable.just(List.of(project1)));
     String displayName = runConfig.displayName().blockingFirst();
-    assertEquals("Run All Tests", displayName);
+    assertEquals("Cypress Run All Tests", displayName);
 
-    runConfig = new AllTestsRunConfig(project1, Observable.just(List.of()));
+    runConfig = new CypressRunAllConfig(project1, Observable.just(List.of()));
     displayName = runConfig.displayName().blockingFirst();
-    assertEquals("Run All Tests", displayName);
+    assertEquals("Cypress Run All Tests", displayName);
 
-    runConfig = new AllTestsRunConfig(project1, Observable.just(List.of(project1, project2)));
+    runConfig = new CypressRunAllConfig(project1, Observable.just(List.of(project1, project2)));
     displayName = runConfig.displayName().blockingFirst();
-    assertEquals("Run All Tests### (" + _PROJECT1_NAME + ")", displayName);
+    assertEquals("Cypress Run All Tests### (" + _PROJECT1_NAME + ")", displayName);
 
-    runConfig = new AllTestsRunConfig(project2, Observable.just(List.of(project1, project2)));
+    runConfig = new CypressRunAllConfig(project2, Observable.just(List.of(project1, project2)));
     displayName = runConfig.displayName().blockingFirst();
-    assertEquals("Run All Tests### (" + _PROJECT2_NAME + ")", displayName);
+    assertEquals("Cypress Run All Tests### (" + _PROJECT2_NAME + ")", displayName);
   }
 }

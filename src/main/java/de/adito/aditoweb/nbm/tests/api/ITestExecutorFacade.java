@@ -30,4 +30,11 @@ public interface ITestExecutorFacade
    * @param pProject current project
    */
   void executeAllTests(@NotNull Project pProject);
+
+  /**
+   * Executes the cypress open command
+   *
+   * @param pProject current project
+   */
+  void executeCypressOpen(@NotNull Project pProject);
 }

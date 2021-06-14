@@ -28,15 +28,15 @@ class Test_TestsRunConfigProvider
     Mockito.when(systemInfoMockSecond.getProject()).thenReturn(Mockito.mock(Project.class));
 
     List<IRunConfig> configs = provider.runConfigurations(List.of(systemInfoMock)).blockingFirst();
-    assertEquals(1, configs.size());
+    assertEquals(2, configs.size());
 
     configs = provider.runConfigurations(List.of(systemInfoMock, systemInfoMock)).blockingFirst();
-    assertEquals(1, configs.size());
+    assertEquals(2, configs.size());
 
     configs = provider.runConfigurations(List.of()).blockingFirst();
     assertEquals(0, configs.size());
 
     configs = provider.runConfigurations(List.of(systemInfoMock, systemInfoMockSecond)).blockingFirst();
-    assertEquals(2, configs.size());
+    assertEquals(4, configs.size());
   }
 }
