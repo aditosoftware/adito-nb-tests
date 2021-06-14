@@ -4,6 +4,7 @@ import de.adito.actions.AbstractAsyncNodeAction;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IProjectQuery;
 import de.adito.aditoweb.nbm.tests.api.ITestFileProvider;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.Project;
 import org.openide.*;
@@ -112,7 +113,13 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
       f = findFile(pNode);
 
       if (project != null && f != null)
-        f = project.getLookup().lookup(TestsFolderService.class).getTestsFolderForModel(f.getName());
+      {
+        String name = f.getName();
+        // only the name of the model without the extensions "aod"
+        if (f.isFile())
+          name = FilenameUtils.removeExtension(name);
+        f = project.getLookup().lookup(TestsFolderService.class).getTestsFolderForModel(name);
+      }
     }
 
     return f;
