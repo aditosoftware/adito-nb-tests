@@ -25,6 +25,9 @@ public class NewTestFileAction extends AbstractFolderBasedAction
   @Override
   protected void performAction0(@NotNull Node pNode, @NotNull File pParent, @NotNull String pName)
   {
+    if (!pName.endsWith(".ts"))
+      pName += ".ts";
+
     File target = new File(pParent, pName);
     if (!target.exists())
     {
