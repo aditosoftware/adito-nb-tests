@@ -5,14 +5,19 @@ OpenIDE-Module-Display-Category: ADITO / Testing
 OpenIDE-Module-Short-Description: UI Testing Support for ADITO Designer
 OpenIDE-Module-Long-Description: Integrates an UI Testing Support based on Cypress
   <p style="font-weight: bold;">Changelog</p>
+  <p style="font-weight: bold;">v1.0.2</p>
+  <p style="margin-left: 10px; font-weight: bold;">MINOR</p>
+  <ul>
+    <li>Added cypress icon to runconfigs</li>
+  </ul>
   <p style="font-weight: bold;">v1.0.1</p>
-    <p style="margin-left: 10px; font-weight: bold;">MINOR</p>
-    <ul>
-      <li>Added cypress open command as runconfig</li>
-      <li>Testfiles are created with ".ts" as file ending</li>
-    </ul>
-    <p style="margin-left: 10px; font-weight: bold;">BUGFIXES</p>
-    <ul>
-      <li>Fix: The wrong plugin name and category was displayed</li>
-      <li>Fix: Tests folder had wrong name</li>
-    </ul>
+  <p style="margin-left: 10px; font-weight: bold;">MINOR</p>
+  <ul>
+    <li>Added cypress open command as runconfig</li>
+    <li>Testfiles are created with ".ts" as file ending</li>
+  </ul>
+  <p style="margin-left: 10px; font-weight: bold;">BUGFIXES</p>
+  <ul>
+    <li>Fix: The wrong plugin name and category was displayed</li>
+    <li>Fix: Tests folder had wrong name</li>
+  </ul>
