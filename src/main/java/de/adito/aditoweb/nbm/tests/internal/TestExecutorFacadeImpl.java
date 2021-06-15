@@ -43,11 +43,10 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
         .map(File::getAbsolutePath)
         .collect(Collectors.joining(","));
 
-    String specQuoted = "\"" + specs + "\"";
     try
     {
       executor.executeAsync(nodeJsEnv, _getExecBase(), outputWriter, null,
-                            null, "run", "--spec", specQuoted);
+                            null, "run", "--spec", specs);
     }
     catch (IOException pE)
     {
