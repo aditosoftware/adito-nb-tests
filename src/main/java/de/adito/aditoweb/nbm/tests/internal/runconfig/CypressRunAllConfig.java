@@ -1,18 +1,18 @@
 package de.adito.aditoweb.nbm.tests.internal.runconfig;
 
 import de.adito.aditoweb.nbm.tests.api.ITestExecutorFacade;
-import de.adito.aditoweb.nbm.vaadinicons.IVaadinIconsProvider;
 import de.adito.nbm.runconfig.api.*;
 import de.adito.nbm.runconfig.spi.IActiveConfigComponentProvider;
 import de.adito.observables.netbeans.ProjectObservable;
-import de.adito.swing.icon.IconAttributes;
 import io.reactivex.rxjava3.core.Observable;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.*;
-import org.openide.util.*;
+import org.openide.util.NbBundle;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.IOException;
 import java.util.List;
 import java.util.*;
 
@@ -24,13 +24,11 @@ import java.util.*;
 public class CypressRunAllConfig implements IRunConfig
 {
   protected final Project project;
-  private final IVaadinIconsProvider iconsProvider;
   private final Observable<List<Project>> openProjects;
 
   public CypressRunAllConfig(@NotNull Project pProject, @NotNull Observable<List<Project>> pOpenProjects)
   {
     openProjects = pOpenProjects;
-    iconsProvider = Lookup.getDefault().lookup(IVaadinIconsProvider.class);
     project = pProject;
   }
 
@@ -45,8 +43,14 @@ public class CypressRunAllConfig implements IRunConfig
   @Override
   public Observable<Optional<Image>> icon()
   {
-    return Observable.just(Optional.ofNullable(iconsProvider)
-                               .map(pIconProvider -> pIconProvider.findImage(IVaadinIconsProvider.VaadinIcon.AUTOMATION, new IconAttributes.Builder().create())));
+    try
+    {
+      return Observable.just(Optional.of(ImageIO.read(getClass().getResource("cypress.png"))));
+    }
+    catch (IOException pE)
+    {
+      return Observable.just(Optional.empty());
+    }
   }
 
   @NotNull
@@ -71,14 +75,14 @@ public class CypressRunAllConfig implements IRunConfig
         });
   }
 
-  protected String getText()
-  {
-    return NbBundle.getMessage(CypressRunAllConfig.class, "TITLE_CYPRESS_RUN_CONFIG");
-  }
-
   @Override
   public void executeAsnyc(@NotNull ProgressHandle pProgressHandle)
   {
     ITestExecutorFacade.INSTANCE.executeAllTests(project);
+  }
+
+  protected String getText()
+  {
+    return NbBundle.getMessage(CypressRunAllConfig.class, "TITLE_CYPRESS_RUN_CONFIG");
   }
 }
