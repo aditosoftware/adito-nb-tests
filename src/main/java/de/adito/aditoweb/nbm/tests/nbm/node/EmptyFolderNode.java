@@ -1,5 +1,6 @@
 package de.adito.aditoweb.nbm.tests.nbm.node;
 
+import com.google.common.base.Strings;
 import de.adito.aditoweb.nbm.tests.nbm.node.modification.FolderNode;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.*;
@@ -10,6 +11,7 @@ import org.openide.nodes.*;
 import org.openide.util.NbBundle;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 
@@ -20,6 +22,10 @@ import java.util.Optional;
  */
 class EmptyFolderNode extends FilterNode implements Disposable
 {
+  private static final Color _DEFAULTVALUE_COLOR = UIManager.getColor("PropSheet.disabledForeground");
+  private static final String _DEFAULTVALUE_COLOR_STRING = _DEFAULTVALUE_COLOR == null ? null :
+      Strings.padStart(Integer.toHexString(_DEFAULTVALUE_COLOR.getRGB()), 8, '0').substring(2);
+
   private final CompositeDisposable disposable = new CompositeDisposable();
   private final Runnable createFolderRunnable;
   private final String displayName;
@@ -55,9 +61,11 @@ class EmptyFolderNode extends FilterNode implements Disposable
   }
 
   @Override
-  public String getDisplayName()
+  public String getHtmlDisplayName()
   {
-    return displayName;
+    if (!Children.LEAF.equals(getChildren()) || _DEFAULTVALUE_COLOR_STRING == null)
+      return displayName;
+    return "<html><font color=\"" + _DEFAULTVALUE_COLOR_STRING + "\">" + displayName + "</font></html>";
   }
 
   @Override
