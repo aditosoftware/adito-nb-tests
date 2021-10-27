@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.*;
 import org.openide.nodes.*;
-import org.openide.util.NbBundle;
+import org.openide.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +25,8 @@ class EmptyFolderNode extends FilterNode implements Disposable
   private static final Color _DEFAULTVALUE_COLOR = UIManager.getColor("PropSheet.disabledForeground");
   private static final String _DEFAULTVALUE_COLOR_STRING = _DEFAULTVALUE_COLOR == null ? null :
       Strings.padStart(Integer.toHexString(_DEFAULTVALUE_COLOR.getRGB()), 8, '0').substring(2);
+  private static final Image _ICON = ImageUtilities.loadImage("de/adito/aditoweb/nbm/tests/nbm/node/folder.png");
+  private static final Image _ICON_OPEN = ImageUtilities.loadImage("de/adito/aditoweb/nbm/tests/nbm/node/folder-open.png");
 
   private final CompositeDisposable disposable = new CompositeDisposable();
   private final Runnable createFolderRunnable;
@@ -66,6 +68,18 @@ class EmptyFolderNode extends FilterNode implements Disposable
     if (!Children.LEAF.equals(getChildren()) || _DEFAULTVALUE_COLOR_STRING == null)
       return displayName;
     return "<html><font color=\"" + _DEFAULTVALUE_COLOR_STRING + "\">" + displayName + "</font></html>";
+  }
+
+  @Override
+  public Image getIcon(int type)
+  {
+    return _ICON;
+  }
+
+  @Override
+  public Image getOpenedIcon(int type)
+  {
+    return _ICON_OPEN;
   }
 
   @Override
