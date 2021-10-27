@@ -6,7 +6,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.*;
 import org.jetbrains.annotations.NotNull;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.*;
+import org.openide.loaders.DataObject;
 import org.openide.nodes.*;
 import org.openide.util.*;
 
@@ -45,18 +45,17 @@ class EmptyFolderNode extends FilterNode implements Disposable
     createFolderRunnable = pCreateFolderRunnable;
     displayName = pDisplayName;
     disposable.add(pFileObservable
+                       .distinctUntilChanged()
                        .subscribe(pFoOpt -> {
-                                    if (pFoOpt.isPresent())
+                                    try
                                     {
-                                      try
-                                      {
-                                        Node delegate = DataObject.find(pFoOpt.get()).getNodeDelegate();
-                                        Children.MUTEX.postWriteRequest(() -> changeOriginal(new FolderNode(delegate), true));
-                                      }
-                                      catch (DataObjectNotFoundException pE)
-                                      {
-                                        // do nothing
-                                      }
+                                      //noinspection OptionalGetWithoutIsPresent handled by exception
+                                      Node delegate = DataObject.find(pFoOpt.get()).getNodeDelegate();
+                                      Children.MUTEX.postWriteRequest(() -> changeOriginal(new FolderNode(delegate), true));
+                                    }
+                                    catch (Exception pE)
+                                    {
+                                      Children.MUTEX.postWriteRequest(() -> changeOriginal(AbstractNode.EMPTY, true));
                                     }
                                   }
                        ));
