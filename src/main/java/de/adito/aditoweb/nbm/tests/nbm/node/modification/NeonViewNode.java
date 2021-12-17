@@ -26,8 +26,6 @@ import java.util.concurrent.TimeUnit;
 class NeonViewNode extends FilterNode implements Disposable
 {
   private final CompositeDisposable disposable = new CompositeDisposable();
-  private Boolean changeOriginal = null;
-  private FolderNode node = null;
   private List<String[]> expanded = null;
 
   public NeonViewNode(Node pOriginal)
@@ -37,45 +35,27 @@ class NeonViewNode extends FilterNode implements Disposable
                           Lookups.exclude(pOriginal.getLookup(), Node.class),
                           Lookups.fixed(new _FileProvider(pOriginal))));
 
-    disposable.add(_watchTestsFolder(pOriginal).subscribe(pFileObject -> FilterNode.Children.MUTEX.postWriteRequest(() -> {
+    disposable.add(_watchTestsFolder(pOriginal).subscribe(pFileObject -> {
       if (pFileObject.isPresent())
       {
-        // change original only once
-        if (Boolean.TRUE.equals(changeOriginal))
-        {
-          Node foNode = _getNode(pFileObject.get());
-          // Create node only once
-          if (node == null)
-          {
-            node = new FolderNode(foNode != null ? foNode : new AbstractNode(Children.LEAF));
-            changeOriginal(node, true);
-            changeOriginal(pOriginal, false);
 
-          }
-          else
-          {
-            if (foNode != null)
-              node.changeOriginal(foNode);
-            if (expanded != null)
-            {
-              ProjectTabUtil.setExpandedNodes(expanded);
-              expanded = null;
-            }
-          }
-          changeOriginal = false;
+        Node foNode = _getNode(pFileObject.get());
+        FolderNode node = new FolderNode(foNode != null ? foNode : new AbstractNode(Children.LEAF));
+        changeOriginal(node, true);
+        changeOriginal(pOriginal, false);
+
+        if (foNode != null)
+          node.changeOriginal(foNode);
+
+        if (expanded != null)
+        {
+          ProjectTabUtil.setExpandedNodes(expanded);
+          expanded = null;
         }
       }
-      // if fileObject isn't present, on the next event the original must be changed
-      else if (Boolean.FALSE.equals(changeOriginal))
-        changeOriginal = true;
-
-      // Change only once the original of the view node
-      if (changeOriginal == null)
-      {
-        changeOriginal(pOriginal, false);
-        changeOriginal = true;
-      }
-    })));
+      else
+        changeOriginal(pOriginal, true);
+    }));
 
     // Tests-Folder-Mover
     disposable.add(_watchViewAODFile(pOriginal)
