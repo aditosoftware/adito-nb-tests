@@ -3,7 +3,7 @@ package de.adito.aditoweb.nbm.tests.actions.create;
 import de.adito.aditoweb.nbm.tests.actions.AbstractFolderBasedAction;
 import de.adito.aditoweb.nbm.tests.nbm.NbUtil;
 import de.adito.notification.INotificationFacade;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.*;
 import org.openide.awt.*;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
@@ -15,15 +15,23 @@ import java.io.*;
  *
  * @author s.seemann, 05.03.2021
  */
-@NbBundle.Messages("CTL_NewFile=New Test-File")
+@NbBundle.Messages("CTL_NewFile=Create Empty Cypress File")
 @ActionID(category = "Tests", id = "de.adito.aditoweb.nbm.tests.actions.create.NewTestFileAction")
 @ActionRegistration(displayName = "#CTL_NewFile", lazy = false)
 @ActionReference(path = "Plugins/Tests/Actions/New", position = 200, separatorAfter = 250)
 public class NewTestFileAction extends AbstractFolderBasedAction
 {
-  @SuppressWarnings("ResultOfMethodCallIgnored")
   @Override
   protected void performAction0(@NotNull Node pNode, @NotNull File pParent, @NotNull String pName)
+  {
+    File target = createTarget(pParent, pName);
+    if (target != null)
+      NbUtil.open(target);
+  }
+
+  @SuppressWarnings("ResultOfMethodCallIgnored")
+  @Nullable
+  protected File createTarget(@NotNull File pParent, @NotNull String pName)
   {
     if (!pName.endsWith(".ts"))
       pName += ".ts";
@@ -39,10 +47,10 @@ public class NewTestFileAction extends AbstractFolderBasedAction
       catch (IOException pE)
       {
         INotificationFacade.INSTANCE.error(pE);
+        return null;
       }
     }
-
-    NbUtil.open(target);
+    return target;
   }
 
   @NbBundle.Messages("LBL_NewTestFile=File Name")
