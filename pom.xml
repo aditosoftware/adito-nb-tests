@@ -14,7 +14,7 @@
   <packaging>nbm</packaging>
 
   <properties>
-    <netbeans.version>RELEASE122</netbeans.version>
+    <netbeans.version>RELEASE125</netbeans.version>
   </properties>
 
   <dependencies>
