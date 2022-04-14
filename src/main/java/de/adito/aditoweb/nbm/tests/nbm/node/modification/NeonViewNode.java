@@ -91,7 +91,10 @@ class NeonViewNode extends FilterNode implements Disposable
             .map(pView -> {
               Project project = FileOwnerQuery.getOwner(pView);
               if (project != null)
-                return TestsFolderService.getInstance(project).observeTestsFolderForModel(pView.getName());
+                return TestsFolderService.observe(project)
+                    .switchMap(pTestFolderOpt -> pTestFolderOpt
+                        .map(pService -> pService.observeTestsFolderForModel(pView.getName()))
+                        .orElse(Observable.just(Optional.empty())));
               return null;
             })
             .orElseGet(() -> Observable.just(Optional.empty())))

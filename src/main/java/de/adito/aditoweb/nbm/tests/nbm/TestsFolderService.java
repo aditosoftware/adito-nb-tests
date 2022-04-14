@@ -1,6 +1,6 @@
 package de.adito.aditoweb.nbm.tests.nbm;
 
-import de.adito.observables.netbeans.FileObservable;
+import de.adito.observables.netbeans.*;
 import de.adito.util.reactive.cache.*;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.*;
@@ -39,6 +39,19 @@ public class TestsFolderService implements Disposable
       throw new RuntimeException("Failed to retrieve tests service for project " + pProject + ". " +
                                      "Please reinstall your tests plugin to provide this service.");
     return service;
+  }
+
+  /**
+   * Watches the instance for a specific project
+   *
+   * @param pProject Project
+   * @return the observable to watch for instances
+   */
+  @NotNull
+  public static Observable<Optional<TestsFolderService>> observe(@NotNull Project pProject)
+  {
+    return LookupResultObservable.create(pProject.getLookup(), TestsFolderService.class)
+        .map(pServices -> pServices.stream().findFirst());
   }
 
   @SuppressWarnings("unused") // ServiceProvider

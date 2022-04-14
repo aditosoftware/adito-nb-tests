@@ -1,9 +1,11 @@
 package de.adito.aditoweb.nbm.tests.nbm.node;
 
+import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IDisposerService;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.Project;
 import org.openide.nodes.*;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public class OthersNodeChildFactory extends ChildFactory<String>
 {
   private static final String _NODE_KEY = "cypressOthersNode";
 
-  private Project project;
+  private TestsFolderService folderService;
 
   @SuppressWarnings("unused") // ServiceProvider
   public OthersNodeChildFactory()
@@ -28,19 +30,22 @@ public class OthersNodeChildFactory extends ChildFactory<String>
   @SuppressWarnings("unused") // ServiceProvider
   public OthersNodeChildFactory(@NotNull Project pProject)
   {
-    project = pProject;
+    // ins lookup werfen
+    IDisposerService disposer = Lookup.getDefault().lookup(IDisposerService.class);
+    if (disposer != null)
+      disposer.register(pProject, TestsFolderService.observe(pProject)
+          .subscribe(pServOpt -> {
+            folderService = pServOpt.orElse(null);
+            refresh(false);
+          }));
   }
 
   @Nullable
   @Override
   protected Node createNodeForKey(@NotNull String key)
   {
-    if (key.equals(_NODE_KEY))
-    {
-      TestsFolderService service = TestsFolderService.getInstance(project);
-      return new EmptyFolderNode(service::createCypressFolder, "cypress", service.observeCypressFolder());
-    }
-
+    if (key.equals(_NODE_KEY) && folderService != null)
+      return new EmptyFolderNode(folderService::createCypressFolder, "cypress", folderService.observeCypressFolder());
     return null;
   }
 

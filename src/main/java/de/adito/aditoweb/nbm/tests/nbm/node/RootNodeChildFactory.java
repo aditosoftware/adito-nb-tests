@@ -1,10 +1,11 @@
 package de.adito.aditoweb.nbm.tests.nbm.node;
 
+import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IDisposerService;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.Project;
 import org.openide.nodes.*;
-import org.openide.util.NbBundle;
+import org.openide.util.*;
 import org.openide.util.lookup.ServiceProvider;
 
 import java.util.List;
@@ -20,8 +21,7 @@ public class RootNodeChildFactory extends ChildFactory<String>
 {
   private static final String _NODE_KEY = "cypressGlobalTestsNode";
   private static final String _PROCESS = "PROCESS_EDITOR";
-
-  private Project project;
+  private TestsFolderService folderService;
 
   @SuppressWarnings("unused") // ServiceProvider
   public RootNodeChildFactory()
@@ -31,19 +31,24 @@ public class RootNodeChildFactory extends ChildFactory<String>
   @SuppressWarnings("unused") // ServiceProvider
   public RootNodeChildFactory(@NotNull Project pProject)
   {
-    project = pProject;
+    // ins lookup werfen
+    IDisposerService disposer = Lookup.getDefault().lookup(IDisposerService.class);
+    if (disposer != null)
+      disposer.register(pProject, TestsFolderService.observe(pProject)
+          .subscribe(pServOpt -> {
+            folderService = pServOpt.orElse(null);
+            refresh(false);
+          }));
   }
 
   @Nullable
   @Override
   protected Node createNodeForKey(@NotNull String key)
   {
-    if (key.equals(_NODE_KEY))
-    {
-      TestsFolderService service = TestsFolderService.getInstance(project);
-      return new EmptyFolderNode(service::createGlobalTestsFolder, NbBundle.getMessage(RootNodeChildFactory.class, "LBL_NODE_GLOBAL_TESTSFOLDER_NAME"),
-                                 service.observeGlobalTestsFolder());
-    }
+    if (key.equals(_NODE_KEY) && folderService != null)
+      return new EmptyFolderNode(folderService::createGlobalTestsFolder,
+                                 NbBundle.getMessage(RootNodeChildFactory.class, "LBL_NODE_GLOBAL_TESTSFOLDER_NAME"),
+                                 folderService.observeGlobalTestsFolder());
     return null;
   }
 
