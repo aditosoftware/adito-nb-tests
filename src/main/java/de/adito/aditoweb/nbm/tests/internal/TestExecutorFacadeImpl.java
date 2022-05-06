@@ -23,15 +23,9 @@ import java.util.stream.Collectors;
 public class TestExecutorFacadeImpl implements ITestExecutorFacade
 {
   private final InputOutput output = IOProvider.getDefault().getIO("cypress", false);
-  private final WriterOutputStream outputWriter;
-
+  private WriterOutputStream outputWriter;
   private INodeJSEnvironment nodeJsEnv;
   private INodeJSExecutor executor;
-
-  public TestExecutorFacadeImpl()
-  {
-    outputWriter = new WriterOutputStream(this.output.getOut(), StandardCharsets.UTF_8, 128, true);
-  }
 
   @Override
   public void executeTests(@NotNull Project pProject, @NotNull Collection<FileObject> pFiles)
@@ -88,6 +82,8 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
 
   private void _setup(@NotNull Project pProject)
   {
+    outputWriter = new WriterOutputStream(this.output.getOut(), StandardCharsets.UTF_8, 128, true);
+
     executor = INodeJSExecutor.findInstance(pProject).orElse(null);
     INodeJSProvider provider = INodeJSProvider.findInstance(pProject).orElse(null);
     if (executor == null
