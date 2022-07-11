@@ -33,8 +33,8 @@ public class NewTestFileAction extends AbstractFolderBasedAction
   @Nullable
   protected File createTarget(@NotNull File pParent, @NotNull String pName)
   {
-    if (!pName.endsWith(".ts"))
-      pName += ".ts";
+    if (!pName.endsWith(".cy.ts"))
+      pName += ".cy.ts";
 
     File target = new File(pParent, pName);
     if (!target.exists())
