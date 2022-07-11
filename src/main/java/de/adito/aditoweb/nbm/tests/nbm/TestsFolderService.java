@@ -22,7 +22,7 @@ import java.util.Optional;
 public class TestsFolderService implements Disposable
 {
   private static final String _CYPRESS = "cypress";
-  private static final String _TEST_FOLDER = _CYPRESS + File.separator + "integration";
+  private static final String _TEST_FOLDER = _CYPRESS + File.separator + "e2e";
   private static final String _GLOBAL_TESTS = _TEST_FOLDER + File.separator + "globalTests";
   private static final String _SINGLE_TESTS = _TEST_FOLDER + File.separator + "singleTests";
 
