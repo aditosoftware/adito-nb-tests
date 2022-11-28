@@ -9,6 +9,7 @@ import org.openide.filesystems.FileObject;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.*;
 
 /**
  * Consumer that accepts a new name for a view folder
@@ -45,6 +46,15 @@ class TestsFolderMover implements Consumer<Optional<FileObject>>
       // Nothing to move
       if (Objects.equals(oldName, newName))
         return;
+
+      // Add a check for oldname == null, since the analytics plugin showed that oldname can be null at this point. This would basically mean a new file
+      // is created -> this class only moves files, so log it and return
+      if (oldName == null)
+      {
+        Logger.getLogger(TestsFolderMover.class.getName()).log(Level.INFO, () -> "UI Testing Plugin: Tried to create file " + newName + " in the " +
+            "move listener since the given old name was null.");
+        return;
+      }
 
       try
       {
