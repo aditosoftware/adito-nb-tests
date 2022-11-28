@@ -31,6 +31,7 @@ class EmptyFolderNode extends FilterNode implements Disposable
   private final CompositeDisposable disposable = new CompositeDisposable();
   private final Runnable createFolderRunnable;
   private final String displayName;
+  private final RequestProcessor rp = new RequestProcessor("tEmptyFolderNodeProcessor");
 
   /**
    * Creates a node
@@ -46,19 +47,19 @@ class EmptyFolderNode extends FilterNode implements Disposable
     displayName = pDisplayName;
     disposable.add(pFileObservable
                        .distinctUntilChanged()
-                       .subscribe(pFoOpt -> {
-                                    try
-                                    {
-                                      //noinspection OptionalGetWithoutIsPresent handled by exception
-                                      Node delegate = DataObject.find(pFoOpt.get()).getNodeDelegate();
-                                      Children.MUTEX.postWriteRequest(() -> changeOriginal(new FolderNode(delegate), true));
-                                    }
-                                    catch (Exception pE)
-                                    {
-                                      Children.MUTEX.postWriteRequest(() -> changeOriginal(AbstractNode.EMPTY, true));
-                                    }
-                                  }
-                       ));
+                       .subscribe(pFoOpt -> rp.post(() -> {
+                                                      try
+                                                      {
+                                                        //noinspection OptionalGetWithoutIsPresent handled by exception
+                                                        Node delegate = DataObject.find(pFoOpt.get()).getNodeDelegate();
+                                                        changeOriginal(new FolderNode(delegate), true);
+                                                      }
+                                                      catch (Exception pE)
+                                                      {
+                                                        changeOriginal(AbstractNode.EMPTY, true);
+                                                      }
+                                                    }
+                       )));
   }
 
   @Override

@@ -11,7 +11,7 @@ import org.netbeans.api.project.*;
 import org.openide.filesystems.*;
 import org.openide.loaders.*;
 import org.openide.nodes.*;
-import org.openide.util.Utilities;
+import org.openide.util.*;
 import org.openide.util.lookup.*;
 
 import javax.swing.*;
@@ -27,6 +27,7 @@ class NeonViewNode extends FilterNode implements Disposable
 {
   private final CompositeDisposable disposable = new CompositeDisposable();
   private List<String[]> expanded = null;
+  private final RequestProcessor rp = new RequestProcessor("tNeonViewNodeProcessor");
 
   public NeonViewNode(Node pOriginal)
   {
@@ -35,10 +36,9 @@ class NeonViewNode extends FilterNode implements Disposable
                           Lookups.exclude(pOriginal.getLookup(), Node.class),
                           Lookups.fixed(new _FileProvider(pOriginal))));
 
-    disposable.add(_watchTestsFolder(pOriginal).subscribe(pFileObject -> {
+    disposable.add(_watchTestsFolder(pOriginal).subscribe(pFileObject -> rp.post(() -> {
       if (pFileObject.isPresent())
       {
-
         Node foNode = _getNode(pFileObject.get());
         FolderNode node = new FolderNode(foNode != null ? foNode : new AbstractNode(Children.LEAF));
         changeOriginal(node, true);
@@ -55,7 +55,7 @@ class NeonViewNode extends FilterNode implements Disposable
       }
       else
         changeOriginal(pOriginal, true);
-    }));
+    })));
 
     // Tests-Folder-Mover
     disposable.add(_watchViewAODFile(pOriginal)
