@@ -7,6 +7,7 @@ import org.netbeans.api.project.Project;
 import org.openide.util.Lookup;
 
 import java.io.File;
+import java.nio.file.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,7 +88,7 @@ class TestsFolderServiceTest
     @Test
     void shouldGetTestsFolderForCarFilterView() throws Exception
     {
-      baseGetTestsFolderForModel(false, "MyProject\\cypress\\e2e\\singleTests\\CarFilter_view", "CarFilter_view");
+      baseGetTestsFolderForModel(false, Paths.get("MyProject", "cypress", "e2e", "singleTests", "CarFilter_view"), "CarFilter_view");
     }
 
     /**
@@ -98,7 +99,7 @@ class TestsFolderServiceTest
     @Test
     void shouldGetTestsFolderForCarPreviewView() throws Exception
     {
-      baseGetTestsFolderForModel(true, "MyProject\\cypress\\e2e\\singleTests\\CarPreview_view", "CarPreview_view");
+      baseGetTestsFolderForModel(true, Paths.get("MyProject", "cypress", "e2e", "singleTests", "CarPreview_view"), "CarPreview_view");
     }
 
     /**
@@ -109,7 +110,7 @@ class TestsFolderServiceTest
     @Test
     void shouldGetTestsFolderForCarMainView() throws Exception
     {
-      baseGetTestsFolderForModel(true, "MyProject\\cypress\\e2e\\singleTests\\CarMain_view", "CarMain_view");
+      baseGetTestsFolderForModel(true, Paths.get("MyProject", "cypress", "e2e", "singleTests", "CarMain_view"), "CarMain_view");
     }
 
     /**
@@ -120,7 +121,7 @@ class TestsFolderServiceTest
     @Test
     void shouldGetTestsFolderForCarEditView() throws Exception
     {
-      baseGetTestsFolderForModel(true, "MyProject\\cypress\\e2e\\singleTests\\CarEdit_view", "CarEdit_view");
+      baseGetTestsFolderForModel(true, Paths.get("MyProject", "cypress", "e2e", "singleTests", "CarEdit_view"), "CarEdit_view");
     }
 
     /**
@@ -131,13 +132,13 @@ class TestsFolderServiceTest
      * @param modelName     the name of the file that should be found
      * @throws Exception Error converting the URL with the resources directory to URI or deleting the EMPTY file
      */
-    private void baseGetTestsFolderForModel(boolean shouldExist, @NotNull String endOfFilePath, @NotNull String modelName) throws Exception
+    private void baseGetTestsFolderForModel(boolean shouldExist, @NotNull Path endOfFilePath, @NotNull String modelName) throws Exception
     {
       TestsFolderService testsFolderService = TestsFolderService.getInstance(ServiceTestUtil.createProjectWithExampleFileStructure());
 
       File file = testsFolderService.getTestsFolderForModel(modelName);
-
-      assertAll(() -> assertTrue(file.getAbsolutePath().endsWith(endOfFilePath), "file should end with a specific path"),
+      
+      assertAll(() -> assertTrue(file.getAbsolutePath().endsWith(endOfFilePath.toString()), "file should end with a specific path: expected " + endOfFilePath + " actual " + file.getAbsolutePath()),
                 () -> assertFalse(file.isFile(), "file should not be a file"),
                 () -> assertEquals(shouldExist, file.isDirectory(), "file should be a directory, if it exists"),
                 () -> assertEquals(shouldExist, file.exists(), "should file exist"));

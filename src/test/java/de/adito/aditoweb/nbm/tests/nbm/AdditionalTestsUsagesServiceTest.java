@@ -5,7 +5,7 @@ import org.junit.jupiter.api.*;
 import org.netbeans.api.project.Project;
 
 import java.io.File;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +32,7 @@ class AdditionalTestsUsagesServiceTest
     @Test
     void shouldFindTwoUsages() throws Exception
     {
-      baseFindAdditionalUsages(List.of("CarPreviewNormal.cy.ts", "CarPreviewSpecial.cy.ts"), "CarPreview_view");
+      baseFindAdditionalUsages(new ArrayList<>(List.of("CarPreviewNormal.cy.ts", "CarPreviewSpecial.cy.ts")), "CarPreview_view");
     }
 
     /**
@@ -43,7 +43,7 @@ class AdditionalTestsUsagesServiceTest
     @Test
     void shouldFindOneUsage() throws Exception
     {
-      baseFindAdditionalUsages(List.of("CarEdit.cy.ts"), "CarEdit_view");
+      baseFindAdditionalUsages(new ArrayList<>(List.of("CarEdit.cy.ts")), "CarEdit_view");
     }
 
     /**
@@ -54,7 +54,7 @@ class AdditionalTestsUsagesServiceTest
     @Test
     void shouldFindNoUsageWithExistingFolder() throws Exception
     {
-      baseFindAdditionalUsages(List.of(), "CarMain_view");
+      baseFindAdditionalUsages(new ArrayList<>(), "CarMain_view");
     }
 
     /**
@@ -65,7 +65,7 @@ class AdditionalTestsUsagesServiceTest
     @Test
     void shouldFindNoUsageWithNonExistingFolder() throws Exception
     {
-      baseFindAdditionalUsages(List.of(), "CarFilter_view");
+      baseFindAdditionalUsages(new ArrayList<>(), "CarFilter_view");
     }
 
     /**
@@ -85,7 +85,10 @@ class AdditionalTestsUsagesServiceTest
       // transforming the stream of files that the method returns to a list of filenames for better testing
       List<String> actualFiles = additionalTestsUsagesService.findAdditionalUsages(project, nameOfProperty)
           .map(File::getName)
+          .sorted()
           .collect(Collectors.toList());
+
+      Collections.sort(expectedFilenames);
 
       assertEquals(expectedFilenames, actualFiles);
     }
