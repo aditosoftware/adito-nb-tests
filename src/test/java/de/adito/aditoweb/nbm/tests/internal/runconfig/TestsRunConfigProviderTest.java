@@ -87,21 +87,21 @@ class TestsRunConfigProviderTest
         @Override
         public File getPath()
         {
-          return null;
+          throw new UnsupportedOperationException("not needed for this test");
         }
 
         @NotNull
         @Override
         public File resolveExecBase(@NotNull INodeJSExecBase pBase)
         {
-          return null;
+          throw new UnsupportedOperationException("not needed for this test");
         }
 
         @NotNull
         @Override
         public String getVersion()
         {
-          return null;
+          throw new UnsupportedOperationException("not needed for this test");
         }
 
         @Override
