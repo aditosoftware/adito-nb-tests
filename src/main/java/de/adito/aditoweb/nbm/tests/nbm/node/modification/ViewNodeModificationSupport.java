@@ -2,6 +2,7 @@ package de.adito.aditoweb.nbm.tests.nbm.node.modification;
 
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.nodes.INodeModificationSupport;
 import org.jetbrains.annotations.*;
+import org.netbeans.api.project.*;
 import org.openide.nodes.Node;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -26,6 +27,18 @@ public class ViewNodeModificationSupport implements INodeModificationSupport
   @Override
   public Node modify(@NotNull Node pNode, @NotNull Map<Object, Object> pAttributes)
   {
-    return new NeonViewNode(pNode);
+    Object sourceProject = pAttributes.get("sourceProject");
+
+    // easiest solution: the root project will be in the attributes
+    if (sourceProject instanceof Project)
+      return new NeonViewNode(pNode, (Project) sourceProject);
+
+    // if it is not there, try to get the project from the node lookup and then get the root project
+    Project projectFromLookup = pNode.getLookup().lookup(Project.class);
+    if (projectFromLookup != null)
+      return new NeonViewNode(pNode, ProjectUtils.rootOf(projectFromLookup));
+
+    //if we don't find any project, just return the current node
+    return pNode;
   }
 }

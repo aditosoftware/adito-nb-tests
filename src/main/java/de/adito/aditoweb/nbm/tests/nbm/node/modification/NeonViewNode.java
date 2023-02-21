@@ -1,13 +1,15 @@
 package de.adito.aditoweb.nbm.tests.nbm.node.modification;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.adito.aditoweb.nbm.tests.api.*;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
 import de.adito.nbm.project.ProjectTabUtil;
 import de.adito.observables.netbeans.*;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.*;
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.*;
-import org.netbeans.api.project.*;
+import org.netbeans.api.project.Project;
 import org.openide.filesystems.*;
 import org.openide.loaders.*;
 import org.openide.nodes.*;
@@ -29,17 +31,27 @@ class NeonViewNode extends FilterNode implements Disposable
   private List<String[]> expanded = null;
   private final RequestProcessor rp = new RequestProcessor("tNeonViewNodeProcessor");
 
-  public NeonViewNode(Node pOriginal)
+  private final Project project;
+
+  /**
+   * Constructor.
+   *
+   * @param pOriginal the original node that should be modified
+   * @param pProject  the project the node belongs to
+   */
+  public NeonViewNode(@NotNull Node pOriginal, @NotNull Project pProject)
   {
     super(new AbstractNode(Children.LEAF), null,
           new ProxyLookup(new AbstractLookup(new InstanceContent()),
                           Lookups.exclude(pOriginal.getLookup(), Node.class),
-                          Lookups.fixed(new _FileProvider(pOriginal))));
+                          Lookups.fixed(new FileProvider(pOriginal, pProject))));
 
-    disposable.add(_watchTestsFolder(pOriginal).subscribe(pFileObject -> rp.post(() -> {
+    project = pProject;
+
+    disposable.add(watchTestsFolder(pOriginal).subscribe(pFileObject -> rp.post(() -> {
       if (pFileObject.isPresent())
       {
-        Node foNode = _getNode(pFileObject.get());
+        Node foNode = getNode(pFileObject.get());
         FolderNode node = new FolderNode(foNode != null ? foNode : new AbstractNode(Children.LEAF));
         changeOriginal(node, true);
         changeOriginal(pOriginal, false);
@@ -58,7 +70,7 @@ class NeonViewNode extends FilterNode implements Disposable
     })));
 
     // Tests-Folder-Mover
-    disposable.add(_watchViewAODFile(pOriginal)
+    disposable.add(watchViewAODFile(pOriginal)
                        .debounce(500, TimeUnit.MILLISECONDS)
                        .subscribe(new TestsFolderMover()));
   }
@@ -82,21 +94,16 @@ class NeonViewNode extends FilterNode implements Disposable
    * @return the tests folder observable
    */
   @NotNull
-  private Observable<Optional<FileObject>> _watchTestsFolder(@NotNull Node pViewNode)
+  private Observable<Optional<FileObject>> watchTestsFolder(@NotNull Node pViewNode)
   {
-    return _watchViewAODFile(pViewNode)
+    return watchViewAODFile(pViewNode)
 
         // Watch View-Folder in corresponding tests folder
         .switchMap(pViewOpt -> pViewOpt
-            .map(pView -> {
-              Project project = FileOwnerQuery.getOwner(pView);
-              if (project != null)
-                return TestsFolderService.observe(project)
-                    .switchMap(pTestFolderOpt -> pTestFolderOpt
-                        .map(pService -> pService.observeTestsFolderForModel(pView.getName()))
-                        .orElse(Observable.just(Optional.empty())));
-              return null;
-            })
+            .map(pView -> TestsFolderService.observe(project)
+                .switchMap(pTestFolderOpt -> pTestFolderOpt
+                    .map(pService -> pService.observeTestsFolderForModel(pView.getName()))
+                    .orElse(Observable.just(Optional.empty()))))
             .orElseGet(() -> Observable.just(Optional.empty())))
 
         // only changes
@@ -110,7 +117,7 @@ class NeonViewNode extends FilterNode implements Disposable
    * @return Name-Observable
    */
   @NotNull
-  private Observable<Optional<FileObject>> _watchViewAODFile(@NotNull Node pViewNode)
+  private Observable<Optional<FileObject>> watchViewAODFile(@NotNull Node pViewNode)
   {
     return LookupResultObservable.create(pViewNode.getLookup(), DataObject.class)
 
@@ -134,7 +141,7 @@ class NeonViewNode extends FilterNode implements Disposable
    * @return the node, or null if it cannot be read
    */
   @Nullable
-  private Node _getNode(@NotNull FileObject pFileObject)
+  private Node getNode(@NotNull FileObject pFileObject)
   {
     try
     {
@@ -179,25 +186,21 @@ class NeonViewNode extends FilterNode implements Disposable
       pActions.addAll(Utilities.actionsForPath(ITestsConstants.ACTIONS_PATH));
   }
 
-  private static class _FileProvider implements ITestFileProvider
+  @AllArgsConstructor
+  @VisibleForTesting
+  static class FileProvider implements ITestFileProvider
   {
+
+    @NotNull
     private final Node original;
-
-    _FileProvider(Node pOriginal)
-    {
-
-      original = pOriginal;
-    }
+    @NotNull
+    private final Project project;
 
     @Nullable
     @Override
     public FileObject getFile()
     {
-      Project project = original.getLookup().lookup(Project.class);
-      if (project != null)
-        return FileUtil.toFileObject(TestsFolderService.getInstance(project).getTestsFolderForModel(original.getName()));
-
-      return null;
+      return FileUtil.toFileObject(TestsFolderService.getInstance(project).getTestsFolderForModel(original.getName()));
     }
   }
 }
