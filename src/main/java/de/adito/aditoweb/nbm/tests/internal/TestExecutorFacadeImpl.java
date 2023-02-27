@@ -1,11 +1,12 @@
 package de.adito.aditoweb.nbm.tests.internal;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.javascript.node.*;
 import de.adito.aditoweb.nbm.tests.api.ITestExecutorFacade;
 import de.adito.notification.INotificationFacade;
 import org.apache.commons.io.output.WriterOutputStream;
 import org.jetbrains.annotations.NotNull;
-import org.netbeans.api.project.Project;
+import org.netbeans.api.project.*;
 import org.openide.filesystems.*;
 import org.openide.util.*;
 import org.openide.windows.*;
@@ -30,7 +31,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
   @Override
   public void executeTests(@NotNull Project pProject, @NotNull Collection<FileObject> pFiles)
   {
-    _setup(pProject);
+    setup(pProject);
 
     String specs = pFiles.stream()
         .map(FileUtil::toFile)
@@ -39,7 +40,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
 
     try
     {
-      executor.executeAsync(nodeJsEnv, _getExecBase(), outputWriter, null,
+      executor.executeAsync(nodeJsEnv, getExecBase(), outputWriter, null,
                             null, "run", "--spec", specs);
     }
     catch (IOException pE)
@@ -51,11 +52,11 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
   @Override
   public void executeAllTests(@NotNull Project pProject)
   {
-    _setup(pProject);
+    setup(pProject);
 
     try
     {
-      executor.executeAsync(nodeJsEnv, _getExecBase(), outputWriter, null,
+      executor.executeAsync(nodeJsEnv, getExecBase(), outputWriter, null,
                             null, "run");
     }
     catch (IOException pE)
@@ -67,11 +68,11 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
   @Override
   public void executeCypressOpen(@NotNull Project pProject)
   {
-    _setup(pProject);
+    setup(pProject);
 
     try
     {
-      executor.executeAsync(nodeJsEnv, _getExecBase(), outputWriter, null,
+      executor.executeAsync(nodeJsEnv, getExecBase(), outputWriter, null,
                             null, "open");
     }
     catch (IOException pE)
@@ -80,12 +81,15 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
     }
   }
 
-  private void _setup(@NotNull Project pProject)
+  @VisibleForTesting
+  void setup(@NotNull Project pProject)
   {
+    Project rootProject = ProjectUtils.rootOf(pProject);
+
     outputWriter = new WriterOutputStream(this.output.getOut(), StandardCharsets.UTF_8, 128, true);
 
-    executor = INodeJSExecutor.findInstance(pProject).orElse(null);
-    INodeJSProvider provider = INodeJSProvider.findInstance(pProject).orElse(null);
+    executor = INodeJSExecutor.findInstance(rootProject).orElse(null);
+    INodeJSProvider provider = INodeJSProvider.findInstance(rootProject).orElse(null);
     if (executor == null
         || provider == null
         || !provider.current().blockingFirst().isPresent())
@@ -106,7 +110,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
   }
 
   @NotNull
-  private INodeJSExecBase _getExecBase()
+  private INodeJSExecBase getExecBase()
   {
     if (BaseUtilities.isWindows())
       return INodeJSExecBase.binary("cypress.cmd");

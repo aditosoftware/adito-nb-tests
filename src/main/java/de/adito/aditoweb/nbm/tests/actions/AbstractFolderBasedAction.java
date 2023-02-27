@@ -1,12 +1,13 @@
 package de.adito.aditoweb.nbm.tests.actions;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.adito.actions.AbstractAsyncNodeAction;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IProjectQuery;
 import de.adito.aditoweb.nbm.tests.api.ITestFileProvider;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.*;
-import org.netbeans.api.project.Project;
+import org.netbeans.api.project.*;
 import org.openide.*;
 import org.openide.filesystems.*;
 import org.openide.loaders.DataObject;
@@ -42,7 +43,7 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
 
     //noinspection OptionalGetWithoutIsPresent Action would be disabled
     Node node = Arrays.stream(activatedNodes).filter(Objects::nonNull).findFirst().get(); // NOSONAR
-    File parent = _findFileOnFileSystem(node);
+    File parent = findFileOnFileSystem(node);
     if (parent != null)
       performAction0(node, parent, input);
   }
@@ -95,7 +96,8 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
    * @return the actual file on the filesystem of the node.
    */
   @Nullable
-  private File _findFileOnFileSystem(@NotNull Node pNode)
+  @VisibleForTesting
+  File findFileOnFileSystem(@NotNull Node pNode)
   {
     File f = null;
 
@@ -118,7 +120,10 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
         // only the name of the model without the extensions "aod"
         if (f.isFile())
           name = FilenameUtils.removeExtension(name);
-        f = project.getLookup().lookup(TestsFolderService.class).getTestsFolderForModel(name);
+
+        // get the root project. If we use modularization this will be different from the normal project
+        Project rootProject = ProjectUtils.rootOf(project);
+        f = rootProject.getLookup().lookup(TestsFolderService.class).getTestsFolderForModel(name);
       }
     }
 
