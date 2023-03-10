@@ -41,7 +41,7 @@ class NeonViewNode extends FilterNode implements Disposable
    */
   public NeonViewNode(@NotNull Node pOriginal, @NotNull Project pProject)
   {
-    super(new AbstractNode(Children.LEAF), null,
+    super(pOriginal, new Children(pOriginal),
           new ProxyLookup(new AbstractLookup(new InstanceContent()),
                           Lookups.exclude(pOriginal.getLookup(), Node.class),
                           Lookups.fixed(new FileProvider(pOriginal, pProject))));
