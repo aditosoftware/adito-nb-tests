@@ -10,11 +10,14 @@ import java.util.Map;
 
 
 /**
- * Modifies the neonView-Nodes to display the contents of the cypress-Folder directly under its view
+ * Modifies the neonView-Nodes to display the contents of the cypress-Folder directly under its view.
+ * <p>
+ * The position of this modification needs to be rather high, in order to be applied after other modifications
+ * and therefore adding the children at the latest possible moment.
  *
  * @author s.seemann, 04.03.2021
  */
-@ServiceProvider(service = INodeModificationSupport.class, path = "Projects/de-adito-project/Nodes/neonView", position = 100)
+@ServiceProvider(service = INodeModificationSupport.class, path = "Projects/de-adito-project/Nodes/neonView", position = 10_000)
 public class ViewNodeModificationSupport implements INodeModificationSupport
 {
   @Override

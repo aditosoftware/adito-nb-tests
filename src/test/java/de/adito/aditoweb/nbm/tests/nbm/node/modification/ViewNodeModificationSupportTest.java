@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.netbeans.api.project.*;
 import org.openide.loaders.DataObject;
-import org.openide.nodes.Node;
+import org.openide.nodes.*;
 import org.openide.util.Lookup;
 
 import java.util.*;
@@ -110,6 +110,7 @@ class ViewNodeModificationSupportTest
       Mockito.doReturn(pProjectReturnedByLookup).when(lookup).lookup(Project.class);
 
       Node node = Mockito.mock(Node.class);
+      Mockito.doReturn(Children.LEAF).when(node).getChildren();
       Mockito.doReturn(lookup).when(node).getLookup();
 
 
@@ -129,7 +130,7 @@ class ViewNodeModificationSupportTest
         assertEquals(pIsNeonViewNode, actualNode instanceof NeonViewNode, "is the actual node " + node + " instanceOf NeonViewNode");
 
         projectUtilsMockedStatic.verify(() -> ProjectUtils.rootOf(any()), Mockito.times(pCallRootOf));
-        
+
         Mockito.verify(lookup, Mockito.times(pCallOfLookupProject)).lookup(Project.class);
 
         Mockito.verify(node, Mockito.times(pCallOfGetLookup)).getLookup();
