@@ -1,6 +1,7 @@
 package de.adito.aditoweb.nbm.tests.nbm.node.modification;
 
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.nodes.INodeModificationSupport;
+import lombok.NonNull;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.*;
 import org.openide.nodes.Node;
@@ -21,14 +22,14 @@ import java.util.Map;
 public class ViewNodeModificationSupport implements INodeModificationSupport
 {
   @Override
-  public boolean canModify(@NotNull Node pNode)
+  public boolean canModify(@NonNull Node pNode)
   {
     return true;
   }
 
   @Nullable
   @Override
-  public Node modify(@NotNull Node pNode, @NotNull Map<Object, Object> pAttributes)
+  public Node modify(@NonNull Node pNode, @NonNull Map<Object, Object> pAttributes)
   {
     Object sourceProject = pAttributes.get("sourceProject");
 

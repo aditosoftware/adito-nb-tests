@@ -4,6 +4,7 @@ import de.adito.observables.netbeans.*;
 import de.adito.util.reactive.cache.*;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.*;
+import lombok.NonNull;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.Project;
@@ -31,8 +32,8 @@ public class TestsFolderService implements Disposable
   private final ObservableCache cache = new ObservableCache();
   private final CompositeDisposable disposable = new CompositeDisposable();
 
-  @NotNull
-  public static TestsFolderService getInstance(@NotNull Project pProject)
+  @NonNull
+  public static TestsFolderService getInstance(@NonNull Project pProject)
   {
     TestsFolderService service = pProject.getLookup().lookup(TestsFolderService.class);
     if (service == null)
@@ -47,8 +48,8 @@ public class TestsFolderService implements Disposable
    * @param pProject Project
    * @return the observable to watch for instances
    */
-  @NotNull
-  public static Observable<Optional<TestsFolderService>> observe(@NotNull Project pProject)
+  @NonNull
+  public static Observable<Optional<TestsFolderService>> observe(@NonNull Project pProject)
   {
     return LookupResultObservable.create(pProject.getLookup(), TestsFolderService.class)
         .map(pServices -> pServices.stream().findFirst());
@@ -60,7 +61,7 @@ public class TestsFolderService implements Disposable
   }
 
   @SuppressWarnings("unused") // ServiceProvider with given Project
-  public TestsFolderService(@NotNull Project pProject)
+  public TestsFolderService(@NonNull Project pProject)
   {
     project = pProject;
     disposable.add(new ObservableCacheDisposable(cache));
@@ -79,7 +80,7 @@ public class TestsFolderService implements Disposable
     return disposable.isDisposed();
   }
 
-  @NotNull
+  @NonNull
   public Observable<Optional<FileObject>> observeCypressFolder()
   {
     return cache.calculate("testsFolder", () -> FileObservable.create(_getCypressFolderFile())
@@ -91,7 +92,7 @@ public class TestsFolderService implements Disposable
    *
    * @return Observable with the folder as content
    */
-  @NotNull
+  @NonNull
   public Observable<Optional<FileObject>> observeTestsFolder()
   {
     return cache.calculate("testsFolder", () -> FileObservable.create(_getTestsFolderFile())
@@ -104,8 +105,8 @@ public class TestsFolderService implements Disposable
    * @param pModelName the model name
    * @return Observable with the folder as content. Triggers on Rename/Move etc.
    */
-  @NotNull
-  public Observable<Optional<FileObject>> observeTestsFolderForModel(@NotNull String pModelName)
+  @NonNull
+  public Observable<Optional<FileObject>> observeTestsFolderForModel(@NonNull String pModelName)
   {
     return cache.calculate("testsFolderForModel_" + pModelName, () -> FileObservable.create(_getTestsFolderFileForModel(pModelName))
         .map(pFileOpt -> pFileOpt.map(FileUtil::toFileObject)));
@@ -116,7 +117,7 @@ public class TestsFolderService implements Disposable
    *
    * @return Observable with the folder as content. Triggers on Rename/Move etc.
    */
-  @NotNull
+  @NonNull
   public Observable<Optional<FileObject>> observeGlobalTestsFolder()
   {
     return cache.calculate("testsGlobalTestsFolder", () -> FileObservable.create(_getGlobalTestsFolder())
@@ -129,8 +130,8 @@ public class TestsFolderService implements Disposable
    * @param pModelName name of the model
    * @return the file
    */
-  @NotNull
-  public File getTestsFolderForModel(@NotNull String pModelName)
+  @NonNull
+  public File getTestsFolderForModel(@NonNull String pModelName)
   {
     return _getTestsFolderFileForModel(pModelName);
   }
@@ -142,7 +143,7 @@ public class TestsFolderService implements Disposable
    * @param pNewName the new name or null, if the element should be deleted
    * @throws IOException if something goes wrong
    */
-  public void renameModel(@NotNull String pOldName, @Nullable String pNewName) throws IOException
+  public void renameModel(@NonNull String pOldName, @Nullable String pNewName) throws IOException
   {
     // nothing to change
     if (pOldName.equals(pNewName))
@@ -179,25 +180,25 @@ public class TestsFolderService implements Disposable
   }
 
 
-  @NotNull
-  private File _getTestsFolderFileForModel(@NotNull String pModelName)
+  @NonNull
+  private File _getTestsFolderFileForModel(@NonNull String pModelName)
   {
     return new File(FileUtil.toFile(project.getProjectDirectory()), _SINGLE_TESTS + File.separator + pModelName);
   }
 
-  @NotNull
+  @NonNull
   private File _getGlobalTestsFolder()
   {
     return new File(FileUtil.toFile(project.getProjectDirectory()), _GLOBAL_TESTS);
   }
 
-  @NotNull
+  @NonNull
   private File _getTestsFolderFile()
   {
     return new File(FileUtil.toFile(project.getProjectDirectory()), _TEST_FOLDER);
   }
 
-  @NotNull
+  @NonNull
   private File _getCypressFolderFile()
   {
     return new File(FileUtil.toFile(project.getProjectDirectory()), _CYPRESS);

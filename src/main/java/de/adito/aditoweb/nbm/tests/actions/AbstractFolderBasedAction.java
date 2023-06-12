@@ -5,6 +5,7 @@ import de.adito.actions.AbstractAsyncNodeAction;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IProjectQuery;
 import de.adito.aditoweb.nbm.tests.api.ITestFileProvider;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
+import lombok.NonNull;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.*;
@@ -26,7 +27,7 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
 {
 
   @Override
-  protected boolean enable0(@NotNull Node[] activatedNodes)
+  protected boolean enable0(@NonNull Node[] activatedNodes)
   {
     // One Non-Null Node
     return Arrays.stream(activatedNodes).filter(Objects::nonNull).count() == 1;
@@ -55,12 +56,12 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
    * @param pParent the Parent
    * @param pName   the name of a new file
    */
-  protected abstract void performAction0(@NotNull Node pNode, @NotNull File pParent, @NotNull String pName);
+  protected abstract void performAction0(@NonNull Node pNode, @NonNull File pParent, @NonNull String pName);
 
   /**
    * @return the Label for the dialog with user-interaction
    */
-  @NotNull
+  @NonNull
   protected abstract String getInputLineTitle();
 
   @Override
@@ -76,7 +77,7 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
    * @return a file or null, if nothing was found
    */
   @Nullable
-  public File findFile(@NotNull Node pNode)
+  public File findFile(@NonNull Node pNode)
   {
     FileObject fo = pNode.getLookup().lookup(FileObject.class);
     if (fo != null)
@@ -97,7 +98,7 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
    */
   @Nullable
   @VisibleForTesting
-  File findFileOnFileSystem(@NotNull Node pNode)
+  File findFileOnFileSystem(@NonNull Node pNode)
   {
     File f = null;
 

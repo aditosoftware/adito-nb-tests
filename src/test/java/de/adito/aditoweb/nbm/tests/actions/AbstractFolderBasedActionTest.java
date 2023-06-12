@@ -3,6 +3,7 @@ package de.adito.aditoweb.nbm.tests.actions;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IProjectQuery;
 import de.adito.aditoweb.nbm.tests.api.ITestFileProvider;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
+import lombok.NonNull;
 import org.jetbrains.annotations.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,7 +38,7 @@ class AbstractFolderBasedActionTest
     /**
      * @return the arguments for {@link #shouldFindFileOnFileSystem(File, int, int, ITestFileProvider, Project)}
      */
-    @NotNull
+    @NonNull
     private Stream<Arguments> shouldFindFileOnFileSystem()
     {
       Project project = Mockito.spy(Project.class);
@@ -80,7 +81,7 @@ class AbstractFolderBasedActionTest
      */
     @ParameterizedTest
     @MethodSource
-    void shouldFindFileOnFileSystem(@NotNull File pExpected, int pCallProjectQuery, int pCallTestFolderForModel,
+    void shouldFindFileOnFileSystem(@NonNull File pExpected, int pCallProjectQuery, int pCallTestFolderForModel,
                                     @Nullable ITestFileProvider pTestFileProvider, @Nullable Project pProject)
     {
       Lookup nodeLookup = Mockito.mock(Lookup.class);
@@ -160,18 +161,18 @@ class AbstractFolderBasedActionTest
    *
    * @return the created instance
    */
-  @NotNull
+  @NonNull
   private static AbstractFolderBasedAction createAbstractFolderBasedAction()
   {
     return new AbstractFolderBasedAction()
     {
       @Override
-      protected void performAction0(@NotNull Node pNode, @NotNull File pParent, @NotNull String pName)
+      protected void performAction0(@NonNull Node pNode, @NonNull File pParent, @NonNull String pName)
       {
         throw new UnsupportedOperationException("not needed for this junit test");
       }
 
-      @NotNull
+      @NonNull
       @Override
       protected String getInputLineTitle()
       {

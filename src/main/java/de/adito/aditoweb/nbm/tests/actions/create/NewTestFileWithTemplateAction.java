@@ -3,8 +3,8 @@ package de.adito.aditoweb.nbm.tests.actions.create;
 import com.google.common.base.Charsets;
 import de.adito.aditoweb.nbm.tests.nbm.NbUtil;
 import de.adito.notification.INotificationFacade;
+import lombok.NonNull;
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.NotNull;
 import org.openide.awt.*;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
@@ -38,7 +38,7 @@ public class NewTestFileWithTemplateAction extends NewTestFileAction
   }
 
   @Override
-  protected void performAction0(@NotNull Node pNode, @NotNull File pParent, @NotNull String pName)
+  protected void performAction0(@NonNull Node pNode, @NonNull File pParent, @NonNull String pName)
   {
     File target = createTarget(pParent, pName);
 

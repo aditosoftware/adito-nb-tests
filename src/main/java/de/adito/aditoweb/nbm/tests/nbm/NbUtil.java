@@ -1,6 +1,6 @@
 package de.adito.aditoweb.nbm.tests.nbm;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.netbeans.api.actions.Openable;
 import org.openide.filesystems.*;
 import org.openide.util.Lookup;
@@ -24,7 +24,7 @@ public class NbUtil
    *
    * @param pFile the file, which should be opened
    */
-  public static void open(@NotNull File pFile)
+  public static void open(@NonNull File pFile)
   {
     FileObject fo = FileUtil.toFileObject(pFile);
     open(fo);
@@ -35,7 +35,7 @@ public class NbUtil
    *
    * @param pLookupProvider the element, which should be opened
    */
-  public static void open(@NotNull Lookup.Provider pLookupProvider)
+  public static void open(@NonNull Lookup.Provider pLookupProvider)
   {
     for (Openable openable : pLookupProvider.getLookup().lookupAll(Openable.class))
       openable.open();

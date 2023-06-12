@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import de.adito.aditoweb.nbm.tests.nbm.node.modification.FolderNode;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.*;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.*;
@@ -40,7 +40,7 @@ class EmptyFolderNode extends FilterNode implements Disposable
    * @param pDisplayName          display Name
    * @param pFileObservable       Observable for the fileobject
    */
-  public EmptyFolderNode(@NotNull Runnable pCreateFolderRunnable, @NotNull String pDisplayName, @NotNull Observable<Optional<FileObject>> pFileObservable)
+  public EmptyFolderNode(@NonNull Runnable pCreateFolderRunnable, @NonNull String pDisplayName, @NonNull Observable<Optional<FileObject>> pFileObservable)
   {
     super(AbstractNode.EMPTY);
     createFolderRunnable = pCreateFolderRunnable;
@@ -107,7 +107,7 @@ class EmptyFolderNode extends FilterNode implements Disposable
   {
     private final Runnable createFolderRunnable;
 
-    public _CreateFolderAction(@NotNull Runnable pCreateFolderRunnable)
+    public _CreateFolderAction(@NonNull Runnable pCreateFolderRunnable)
     {
       createFolderRunnable = pCreateFolderRunnable;
       putValue(Action.NAME, NbBundle.getMessage(EmptyFolderNode.class, "LBL_CREATE_FOLDER"));

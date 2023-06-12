@@ -3,6 +3,7 @@ package de.adito.aditoweb.nbm.tests.actions.execution;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IProjectQuery;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.javascript.node.INodeJSProvider;
 import de.adito.aditoweb.nbm.tests.api.*;
+import lombok.NonNull;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.Project;
 import org.openide.awt.*;
@@ -30,7 +31,7 @@ public class ExecuteTestAction extends NodeAction
 {
 
   @Override
-  protected boolean enable(@NotNull Node[] activatedNodes)
+  protected boolean enable(@NonNull Node[] activatedNodes)
   {
     if (activatedNodes.length > 0)
     {
@@ -75,8 +76,8 @@ public class ExecuteTestAction extends NodeAction
    * @param pNode the node
    * @return a Stream of the founded files incl. the children
    */
-  @NotNull
-  private Stream<FileObject> _findFile(@NotNull Node pNode)
+  @NonNull
+  private Stream<FileObject> _findFile(@NonNull Node pNode)
   {
     ITestFileProvider provider = pNode.getLookup().lookup(ITestFileProvider.class);
     if (provider != null)
@@ -99,7 +100,7 @@ public class ExecuteTestAction extends NodeAction
    * @return the project or null, if nothing is found
    */
   @Nullable
-  private Project _findProject(@NotNull Node[] pNodes)
+  private Project _findProject(@NonNull Node[] pNodes)
   {
     return Arrays.stream(pNodes)
         .map(pNode -> IProjectQuery.getInstance().findProjects(pNode, IProjectQuery.ReturnType.MULTIPLE_TO_NULL))

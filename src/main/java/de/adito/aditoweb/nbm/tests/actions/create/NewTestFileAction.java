@@ -3,6 +3,7 @@ package de.adito.aditoweb.nbm.tests.actions.create;
 import de.adito.aditoweb.nbm.tests.actions.AbstractFolderBasedAction;
 import de.adito.aditoweb.nbm.tests.nbm.NbUtil;
 import de.adito.notification.INotificationFacade;
+import lombok.NonNull;
 import org.jetbrains.annotations.*;
 import org.openide.awt.*;
 import org.openide.nodes.Node;
@@ -22,7 +23,7 @@ import java.io.*;
 public class NewTestFileAction extends AbstractFolderBasedAction
 {
   @Override
-  protected void performAction0(@NotNull Node pNode, @NotNull File pParent, @NotNull String pName)
+  protected void performAction0(@NonNull Node pNode, @NonNull File pParent, @NonNull String pName)
   {
     File target = createTarget(pParent, pName);
     if (target != null)
@@ -31,7 +32,7 @@ public class NewTestFileAction extends AbstractFolderBasedAction
 
   @SuppressWarnings("ResultOfMethodCallIgnored")
   @Nullable
-  protected File createTarget(@NotNull File pParent, @NotNull String pName)
+  protected File createTarget(@NonNull File pParent, @NonNull String pName)
   {
     if (!pName.endsWith(".cy.ts"))
       pName += ".cy.ts";
@@ -55,7 +56,7 @@ public class NewTestFileAction extends AbstractFolderBasedAction
 
   @NbBundle.Messages("LBL_NewTestFile=File Name")
   @Override
-  @NotNull
+  @NonNull
   protected String getInputLineTitle()
   {
     return Bundle.LBL_NewTestFile();

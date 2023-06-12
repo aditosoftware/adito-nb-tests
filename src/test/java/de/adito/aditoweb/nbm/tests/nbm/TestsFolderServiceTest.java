@@ -1,5 +1,6 @@
 package de.adito.aditoweb.nbm.tests.nbm;
 
+import lombok.NonNull;
 import org.jetbrains.annotations.*;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -59,8 +60,8 @@ class TestsFolderServiceTest
      * @param testsFolderService the service that the {@link Lookup} of the project should return
      * @return the result of the method call
      */
-    @NotNull
-    private TestsFolderService baseGetInstance(@NotNull Project project, @Nullable TestsFolderService testsFolderService)
+    @NonNull
+    private TestsFolderService baseGetInstance(@NonNull Project project, @Nullable TestsFolderService testsFolderService)
     {
       Lookup lookup = Mockito.spy(Lookup.class);
       Mockito.doReturn(testsFolderService).when(lookup).lookup(TestsFolderService.class);
@@ -132,7 +133,7 @@ class TestsFolderServiceTest
      * @param modelName     the name of the file that should be found
      * @throws Exception Error converting the URL with the resources directory to URI or deleting the EMPTY file
      */
-    private void baseGetTestsFolderForModel(boolean shouldExist, @NotNull Path endOfFilePath, @NotNull String modelName) throws Exception
+    private void baseGetTestsFolderForModel(boolean shouldExist, @NonNull Path endOfFilePath, @NonNull String modelName) throws Exception
     {
       TestsFolderService testsFolderService = TestsFolderService.getInstance(ServiceTestUtil.createProjectWithExampleFileStructure());
 
