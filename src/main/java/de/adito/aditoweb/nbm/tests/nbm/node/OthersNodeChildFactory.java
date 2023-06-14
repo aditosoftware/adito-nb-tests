@@ -2,6 +2,7 @@ package de.adito.aditoweb.nbm.tests.nbm.node;
 
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IDisposerService;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
+import lombok.NonNull;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.Project;
 import org.openide.nodes.*;
@@ -28,7 +29,7 @@ public class OthersNodeChildFactory extends ChildFactory<String>
   }
 
   @SuppressWarnings("unused") // ServiceProvider
-  public OthersNodeChildFactory(@NotNull Project pProject)
+  public OthersNodeChildFactory(@NonNull Project pProject)
   {
     // ins lookup werfen
     IDisposerService disposer = Lookup.getDefault().lookup(IDisposerService.class);
@@ -42,7 +43,7 @@ public class OthersNodeChildFactory extends ChildFactory<String>
 
   @Nullable
   @Override
-  protected Node createNodeForKey(@NotNull String key)
+  protected Node createNodeForKey(@NonNull String key)
   {
     if (key.equals(_NODE_KEY) && folderService != null)
       return new EmptyFolderNode(folderService::createCypressFolder, "cypress", folderService.observeCypressFolder());
@@ -50,7 +51,7 @@ public class OthersNodeChildFactory extends ChildFactory<String>
   }
 
   @Override
-  protected boolean createKeys(@NotNull List<String> toPopulate)
+  protected boolean createKeys(@NonNull List<String> toPopulate)
   {
     toPopulate.add(_NODE_KEY);
     return true;

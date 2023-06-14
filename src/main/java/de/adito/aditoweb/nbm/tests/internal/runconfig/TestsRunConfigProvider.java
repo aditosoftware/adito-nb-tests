@@ -5,7 +5,7 @@ import de.adito.nbm.runconfig.api.*;
 import de.adito.observables.netbeans.*;
 import de.adito.util.reactive.ObservableCollectors;
 import io.reactivex.rxjava3.core.Observable;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
@@ -22,7 +22,7 @@ import java.util.*;
 public class TestsRunConfigProvider implements ISystemRunConfigProvider
 {
 
-  @NotNull
+  @NonNull
   @Override
   public Observable<List<IRunConfig>> runConfigurations(List<ISystemInfo> pSystemInfos)
   {

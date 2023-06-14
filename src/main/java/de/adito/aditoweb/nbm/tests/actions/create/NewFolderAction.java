@@ -2,7 +2,7 @@ package de.adito.aditoweb.nbm.tests.actions.create;
 
 import de.adito.aditoweb.nbm.tests.actions.AbstractFolderBasedAction;
 import de.adito.notification.INotificationFacade;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.openide.awt.*;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
@@ -22,7 +22,7 @@ import java.nio.file.Files;
 public class NewFolderAction extends AbstractFolderBasedAction
 {
   @Override
-  protected void performAction0(@NotNull Node pNode, @NotNull File pParent, @NotNull String pName)
+  protected void performAction0(@NonNull Node pNode, @NonNull File pParent, @NonNull String pName)
   {
     try
     {
@@ -36,7 +36,7 @@ public class NewFolderAction extends AbstractFolderBasedAction
 
   @NbBundle.Messages("LBL_NewFolder=Folder Name")
   @Override
-  @NotNull
+  @NonNull
   protected String getInputLineTitle()
   {
     return Bundle.LBL_NewFolder();

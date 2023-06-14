@@ -1,5 +1,6 @@
 package de.adito.aditoweb.nbm.tests.nbm.node.modification;
 
+import lombok.NonNull;
 import org.jetbrains.annotations.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -58,7 +59,7 @@ class ViewNodeModificationSupportTest
     /**
      * @return the arguments for {@link #shouldModify(boolean, int, int, int, Map, Project)}.
      */
-    @NotNull
+    @NonNull
     private Stream<Arguments> shouldModify()
     {
       Project project = Mockito.spy(Project.class);
@@ -100,7 +101,7 @@ class ViewNodeModificationSupportTest
     @ParameterizedTest
     @MethodSource
     void shouldModify(boolean pIsNeonViewNode, int pCallRootOf, int pCallOfLookupProject, int pCallOfGetLookup,
-                      @NotNull Map<Object, Object> pAttributes, @Nullable Project pProjectReturnedByLookup)
+                      @NonNull Map<Object, Object> pAttributes, @Nullable Project pProjectReturnedByLookup)
     {
       @SuppressWarnings("unchecked")
       Lookup.Result<DataObject> result = Mockito.mock(Lookup.Result.class);

@@ -2,7 +2,7 @@ package de.adito.aditoweb.nbm.tests.nbm.node.modification;
 
 import de.adito.aditoweb.nbm.tests.actions.create.NewActionsContainer;
 import de.adito.aditoweb.nbm.tests.api.ITestFileProvider;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.*;
 import org.openide.util.lookup.*;
@@ -17,14 +17,14 @@ import java.util.*;
  */
 public class FolderNode extends FilterNode
 {
-  public FolderNode(@NotNull Node pOriginal)
+  public FolderNode(@NonNull Node pOriginal)
   {
     super(pOriginal, new _Children(pOriginal), new ProxyLookup(Lookups.fixed((ITestFileProvider)
                                                                                  () -> pOriginal.getLookup().lookup(FileObject.class)),
                                                                pOriginal.getLookup()));
   }
 
-  public void changeOriginal(@NotNull Node pNode)
+  public void changeOriginal(@NonNull Node pNode)
   {
     if (!pNode.equals(getOriginal()))
       changeOriginal(pNode, true);
@@ -52,7 +52,7 @@ public class FolderNode extends FilterNode
    */
   private static class _Children extends FilterNode.Children
   {
-    public _Children(@NotNull Node pOriginal)
+    public _Children(@NonNull Node pOriginal)
     {
       super(pOriginal);
     }
@@ -64,7 +64,7 @@ public class FolderNode extends FilterNode
     }
 
     @Override
-    protected Node copyNode(@NotNull Node pNode)
+    protected Node copyNode(@NonNull Node pNode)
     {
       FileObject fo = pNode.getLookup().lookup(FileObject.class);
       if (fo != null)

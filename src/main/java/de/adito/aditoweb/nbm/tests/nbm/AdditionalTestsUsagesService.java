@@ -1,7 +1,7 @@
 package de.adito.aditoweb.nbm.tests.nbm;
 
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.usage.IAdditionalContextChildrenUsageService;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.netbeans.api.project.Project;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -19,9 +19,9 @@ import java.util.stream.Stream;
 public class AdditionalTestsUsagesService implements IAdditionalContextChildrenUsageService
 {
 
-  @NotNull
+  @NonNull
   @Override
-  public Stream<File> findAdditionalUsages(@NotNull Project pProject, @NotNull String pNameOfProperty)
+  public Stream<File> findAdditionalUsages(@NonNull Project pProject, @NonNull String pNameOfProperty)
   {
     TestsFolderService testsFolderService = TestsFolderService.getInstance(pProject);
 

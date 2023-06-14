@@ -4,8 +4,8 @@ import com.google.common.annotations.VisibleForTesting;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.javascript.node.*;
 import de.adito.aditoweb.nbm.tests.api.ITestExecutorFacade;
 import de.adito.notification.INotificationFacade;
+import lombok.NonNull;
 import org.apache.commons.io.output.WriterOutputStream;
-import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.*;
 import org.openide.filesystems.*;
 import org.openide.util.*;
@@ -29,7 +29,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
   private INodeJSExecutor executor;
 
   @Override
-  public void executeTests(@NotNull Project pProject, @NotNull Collection<FileObject> pFiles)
+  public void executeTests(@NonNull Project pProject, @NonNull Collection<FileObject> pFiles)
   {
     setup(pProject);
 
@@ -50,7 +50,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
   }
 
   @Override
-  public void executeAllTests(@NotNull Project pProject)
+  public void executeAllTests(@NonNull Project pProject)
   {
     setup(pProject);
 
@@ -66,7 +66,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
   }
 
   @Override
-  public void executeCypressOpen(@NotNull Project pProject)
+  public void executeCypressOpen(@NonNull Project pProject)
   {
     setup(pProject);
 
@@ -82,7 +82,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
   }
 
   @VisibleForTesting
-  void setup(@NotNull Project pProject)
+  void setup(@NonNull Project pProject)
   {
     Project rootProject = ProjectUtils.rootOf(pProject);
 
@@ -109,7 +109,7 @@ public class TestExecutorFacadeImpl implements ITestExecutorFacade
     output.getOut().println(NbBundle.getMessage(TestExecutorFacadeImpl.class, "LBL_OUTPUT_STARTING"));
   }
 
-  @NotNull
+  @NonNull
   private INodeJSExecBase getExecBase()
   {
     if (BaseUtilities.isWindows())

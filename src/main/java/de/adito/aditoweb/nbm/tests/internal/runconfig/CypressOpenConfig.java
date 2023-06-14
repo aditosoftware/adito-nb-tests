@@ -2,7 +2,7 @@ package de.adito.aditoweb.nbm.tests.internal.runconfig;
 
 import de.adito.aditoweb.nbm.tests.api.ITestExecutorFacade;
 import io.reactivex.rxjava3.core.Observable;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.openide.util.NbBundle;
@@ -17,7 +17,7 @@ import java.util.List;
 public class CypressOpenConfig extends CypressRunAllConfig
 {
 
-  public CypressOpenConfig(@NotNull Project pProject, @NotNull Observable<List<Project>> pOpenProjects)
+  public CypressOpenConfig(@NonNull Project pProject, @NonNull Observable<List<Project>> pOpenProjects)
   {
     super(pProject, pOpenProjects);
   }
@@ -29,7 +29,7 @@ public class CypressOpenConfig extends CypressRunAllConfig
   }
 
   @Override
-  public void executeAsnyc(@NotNull ProgressHandle pProgressHandle)
+  public void executeAsnyc(@NonNull ProgressHandle pProgressHandle)
   {
     ITestExecutorFacade.INSTANCE.executeCypressOpen(project);
   }

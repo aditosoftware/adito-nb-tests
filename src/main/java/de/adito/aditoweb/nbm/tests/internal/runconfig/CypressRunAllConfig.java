@@ -5,7 +5,7 @@ import de.adito.nbm.runconfig.api.*;
 import de.adito.nbm.runconfig.spi.IActiveConfigComponentProvider;
 import de.adito.observables.netbeans.ProjectObservable;
 import io.reactivex.rxjava3.core.Observable;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.*;
 import org.openide.util.NbBundle;
@@ -26,20 +26,20 @@ public class CypressRunAllConfig implements IRunConfig
   protected final Project project;
   private final Observable<List<Project>> openProjects;
 
-  public CypressRunAllConfig(@NotNull Project pProject, @NotNull Observable<List<Project>> pOpenProjects)
+  public CypressRunAllConfig(@NonNull Project pProject, @NonNull Observable<List<Project>> pOpenProjects)
   {
     openProjects = pOpenProjects;
     project = pProject;
   }
 
-  @NotNull
+  @NonNull
   @Override
   public Observable<Optional<IRunConfigCategory>> category()
   {
     return Observable.just(Optional.of(new TestsRunConfigCategory()));
   }
 
-  @NotNull
+  @NonNull
   @Override
   public Observable<Optional<Image>> icon()
   {
@@ -53,7 +53,7 @@ public class CypressRunAllConfig implements IRunConfig
     }
   }
 
-  @NotNull
+  @NonNull
   @Override
   public Observable<String> displayName()
   {
@@ -76,7 +76,7 @@ public class CypressRunAllConfig implements IRunConfig
   }
 
   @Override
-  public void executeAsnyc(@NotNull ProgressHandle pProgressHandle)
+  public void executeAsnyc(@NonNull ProgressHandle pProgressHandle)
   {
     ITestExecutorFacade.INSTANCE.executeAllTests(project);
   }

@@ -2,7 +2,7 @@ package de.adito.aditoweb.nbm.tests.internal.runconfig;
 
 import de.adito.nbm.runconfig.api.IRunConfigCategory;
 import io.reactivex.rxjava3.core.Observable;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.openide.util.NbBundle;
 
 /**
@@ -12,14 +12,14 @@ import org.openide.util.NbBundle;
  */
 public class TestsRunConfigCategory implements IRunConfigCategory
 {
-  @NotNull
+  @NonNull
   @Override
   public String getName()
   {
     return "de-adito-aditoweb-nbm-tests-internal-runconfig-TestsRunConfigCategory";
   }
 
-  @NotNull
+  @NonNull
   @Override
   public Observable<String> title()
   {

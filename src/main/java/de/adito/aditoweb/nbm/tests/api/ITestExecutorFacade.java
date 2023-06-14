@@ -1,7 +1,7 @@
 package de.adito.aditoweb.nbm.tests.api;
 
 import de.adito.aditoweb.nbm.tests.internal.TestExecutorFacadeImpl;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 
@@ -22,19 +22,19 @@ public interface ITestExecutorFacade
    * @param pProject current project
    * @param pFiles   the Files, which should be executed, no folders!
    */
-  void executeTests(@NotNull Project pProject, @NotNull Collection<FileObject> pFiles);
+  void executeTests(@NonNull Project pProject, @NonNull Collection<FileObject> pFiles);
 
   /**
    * Executes all tests, which are in the project found.
    *
    * @param pProject current project
    */
-  void executeAllTests(@NotNull Project pProject);
+  void executeAllTests(@NonNull Project pProject);
 
   /**
    * Executes the cypress open command
    *
    * @param pProject current project
    */
-  void executeCypressOpen(@NotNull Project pProject);
+  void executeCypressOpen(@NonNull Project pProject);
 }

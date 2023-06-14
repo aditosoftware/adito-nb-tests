@@ -8,6 +8,7 @@ import de.adito.observables.netbeans.*;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.*;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.jetbrains.annotations.*;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.*;
@@ -39,7 +40,7 @@ class NeonViewNode extends FilterNode implements Disposable
    * @param pOriginal the original node that should be modified
    * @param pProject  the project the node belongs to
    */
-  public NeonViewNode(@NotNull Node pOriginal, @NotNull Project pProject)
+  public NeonViewNode(@NonNull Node pOriginal, @NonNull Project pProject)
   {
     super(pOriginal, new Children(pOriginal),
           new ProxyLookup(new AbstractLookup(new InstanceContent()),
@@ -93,8 +94,8 @@ class NeonViewNode extends FilterNode implements Disposable
    * @param pViewNode Node of the view
    * @return the tests folder observable
    */
-  @NotNull
-  private Observable<Optional<FileObject>> watchTestsFolder(@NotNull Node pViewNode)
+  @NonNull
+  private Observable<Optional<FileObject>> watchTestsFolder(@NonNull Node pViewNode)
   {
     return watchViewAODFile(pViewNode)
 
@@ -116,8 +117,8 @@ class NeonViewNode extends FilterNode implements Disposable
    * @param pViewNode Node
    * @return Name-Observable
    */
-  @NotNull
-  private Observable<Optional<FileObject>> watchViewAODFile(@NotNull Node pViewNode)
+  @NonNull
+  private Observable<Optional<FileObject>> watchViewAODFile(@NonNull Node pViewNode)
   {
     return LookupResultObservable.create(pViewNode.getLookup(), DataObject.class)
 
@@ -141,7 +142,7 @@ class NeonViewNode extends FilterNode implements Disposable
    * @return the node, or null if it cannot be read
    */
   @Nullable
-  private Node getNode(@NotNull FileObject pFileObject)
+  private Node getNode(@NonNull FileObject pFileObject)
   {
     try
     {
@@ -164,7 +165,7 @@ class NeonViewNode extends FilterNode implements Disposable
    *
    * @param pActions list of actions
    */
-  public static void addExecuteActions(@NotNull List<Action> pActions)
+  public static void addExecuteActions(@NonNull List<Action> pActions)
   {
     boolean wasInserted = false;
 
@@ -191,9 +192,9 @@ class NeonViewNode extends FilterNode implements Disposable
   static class FileProvider implements ITestFileProvider
   {
 
-    @NotNull
+    @NonNull
     private final Node original;
-    @NotNull
+    @NonNull
     private final Project project;
 
     @Nullable

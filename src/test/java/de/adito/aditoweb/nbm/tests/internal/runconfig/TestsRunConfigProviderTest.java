@@ -3,8 +3,8 @@ package de.adito.aditoweb.nbm.tests.internal.runconfig;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.javascript.node.*;
 import de.adito.nbm.runconfig.api.*;
 import io.reactivex.rxjava3.core.Observable;
+import lombok.NonNull;
 import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.netbeans.api.project.Project;
@@ -77,27 +77,27 @@ class TestsRunConfigProviderTest
   @SuppressWarnings("ConstantConditions")
   private static class _INodeJSProvider implements INodeJSProvider
   {
-    @NotNull
+    @NonNull
     @Override
     public Observable<Optional<INodeJSEnvironment>> current()
     {
       return Observable.just(Optional.of(new INodeJSEnvironment()
       {
-        @NotNull
+        @NonNull
         @Override
         public File getPath()
         {
           throw new UnsupportedOperationException("not needed for this test");
         }
 
-        @NotNull
+        @NonNull
         @Override
-        public File resolveExecBase(@NotNull INodeJSExecBase pBase)
+        public File resolveExecBase(@NonNull INodeJSExecBase pBase)
         {
           throw new UnsupportedOperationException("not needed for this test");
         }
 
-        @NotNull
+        @NonNull
         @Override
         public String getVersion()
         {

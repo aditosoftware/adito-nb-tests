@@ -1,6 +1,6 @@
 package de.adito.aditoweb.nbm.tests.nbm;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.junit.jupiter.api.*;
 import org.netbeans.api.project.Project;
 
@@ -75,7 +75,7 @@ class AdditionalTestsUsagesServiceTest
      * @param nameOfProperty    the name of the property that is given to the method
      * @throws Exception Error converting the URL with the resources directory to URI or deleting the EMPTY file
      */
-    private void baseFindAdditionalUsages(@NotNull List<String> expectedFilenames, @NotNull String nameOfProperty) throws Exception
+    private void baseFindAdditionalUsages(@NonNull List<String> expectedFilenames, @NonNull String nameOfProperty) throws Exception
     {
       Project project = ServiceTestUtil.createProjectWithExampleFileStructure();
 
