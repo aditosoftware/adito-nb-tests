@@ -4,7 +4,7 @@ import de.adito.aditoweb.nbm.nbide.nbaditointerface.common.IProjectQuery;
 import de.adito.aditoweb.nbm.nbide.nbaditointerface.javascript.node.INodeJSProvider;
 import de.adito.aditoweb.nbm.tests.api.*;
 import lombok.NonNull;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.api.project.Project;
 import org.openide.awt.*;
 import org.openide.filesystems.FileObject;
@@ -31,7 +31,7 @@ public class ExecuteTestAction extends NodeAction
 {
 
   @Override
-  protected boolean enable(@NonNull Node[] activatedNodes)
+  protected boolean enable(Node @NonNull [] activatedNodes)
   {
     if (activatedNodes.length > 0)
     {
@@ -100,7 +100,7 @@ public class ExecuteTestAction extends NodeAction
    * @return the project or null, if nothing is found
    */
   @Nullable
-  private Project _findProject(@NonNull Node[] pNodes)
+  private Project _findProject(Node @NonNull [] pNodes)
   {
     return Arrays.stream(pNodes)
         .map(pNode -> IProjectQuery.getInstance().findProjects(pNode, IProjectQuery.ReturnType.MULTIPLE_TO_NULL))

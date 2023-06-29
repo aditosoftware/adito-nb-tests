@@ -7,7 +7,7 @@ import de.adito.aditoweb.nbm.tests.api.ITestFileProvider;
 import de.adito.aditoweb.nbm.tests.nbm.TestsFolderService;
 import lombok.NonNull;
 import org.apache.commons.io.FilenameUtils;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.api.project.*;
 import org.openide.*;
 import org.openide.filesystems.*;
@@ -27,7 +27,7 @@ public abstract class AbstractFolderBasedAction extends AbstractAsyncNodeAction
 {
 
   @Override
-  protected boolean enable0(@NonNull Node[] activatedNodes)
+  protected boolean enable0(Node @NonNull [] activatedNodes)
   {
     // One Non-Null Node
     return Arrays.stream(activatedNodes).filter(Objects::nonNull).count() == 1;
